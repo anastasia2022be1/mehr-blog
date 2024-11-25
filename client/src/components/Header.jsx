@@ -20,7 +20,7 @@ const Header = () => {
         
         <ul className={`nav__menu ${menuOpen ? "show-menu" : ""}`}>
           <li>
-            <Link to="/profile">Ernest Achiever</Link>
+            <Link to="/profile">Anastasia Sevastianova</Link>
           </li>
           <li>
             <Link to="/create">Create Post</Link>
