@@ -5,7 +5,7 @@ import PostAuthor from './PostAuthor.jsx'
 const PostItem = ({postID, category, title, desc, authorID, thumbnail }) => {
   return (
       <article className='post'>
-          <div className="post__thubnail">
+          <div className="post__thumbnail">
               <img src={thumbnail} alt={title} />
           </div>
           <div className="post__content">
