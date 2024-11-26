@@ -103,7 +103,7 @@ section {
     transition: var(--transition);
 }
 
-.brn.primary {
+.btn.primary {
     background: var(--color-primary);
     color: var(--color-white);
 }
@@ -129,6 +129,18 @@ section {
 .btn:hover {
     background: var(--color-gray-900);
     color: var(--color-white);
+}
+
+.center {
+    text-align: center;
+    padding-top: 5rem;
+    margin-inline: center;
+    display: block;
+    width: 100%;
+}
+
+.error-page h2{
+    margin-top: 3rem;
 }
 
 /* NAVBAR */
