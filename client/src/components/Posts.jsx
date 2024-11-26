@@ -1,17 +1,17 @@
 import { useState } from "react";
-import Travel1 from "../images/Travel1.jpg"
-import Travel2 from "../images/Travel2.jpg"
-import Travel3 from "../images/Travel3.jpg"
-import Travel4 from "../images/Travel4.jpg"
-import PostItem from "./PostItem.jsx"
+import Travel1 from "../images/Travel1.jpg";
+import Travel2 from "../images/Travel2.jpg";
+import Travel3 from "../images/Travel3.jpg";
+import Travel4 from "../images/Travel4.jpg";
+import PostItem from "./PostItem.jsx";
 
 const DUMMY_POSTS = [
   {
     id: "1",
     thumbnail: Travel1,
     category: "travel",
-    title: "First post on this blog",
-    desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    title: "First post on this blog hhhhhhhhhhhhhhhhhhhhhhhhhh",
+    desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.hjgdsc  sbjasm skhjfenwfm  cxkjelkjrf,s sDLKJFQLKWNEFM <DSYCLKJWNDMSY Cjlksdfnsjdn elkjfenvm kjeslrg cxlvkjlsdnfs dslj,bn fa laa flka  jbjabse dkshfkaew  askjfhka dkjassnms djaknf b clalkanm fkejn   ",
     authorID: 3,
   },
   {
@@ -41,14 +41,24 @@ const DUMMY_POSTS = [
 ];
 
 const Posts = () => {
-    const [posts, setPosts] = useState(DUMMY_POSTS)
+  const [posts, setPosts] = useState(DUMMY_POSTS);
   return (
     <section className="posts">
-      {
-        posts.map(({id, thumbnail, category, title, desc, authorID}) => <PostItem key={id} postID={id} thumbnail={thumbnail} category={category} title={title} desc={desc} authorID={authorID} />)
-      }
+      <div className="container posts__container">
+        {posts.map(({ id, thumbnail, category, title, desc, authorID }) => (
+          <PostItem
+            key={id}
+            postID={id}
+            thumbnail={thumbnail}
+            category={category}
+            title={title}
+            desc={desc}
+            authorID={authorID}
+          />
+        ))}
+      </div>
     </section>
-  )
-}
+  );
+};
 
-export default Posts
+export default Posts;
