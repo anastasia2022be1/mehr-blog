@@ -354,6 +354,12 @@ input, select, textarea {
     color: var(--color-primary);
 }
 
+.ql-editor {
+    overflow: scroll;
+    background:var(--color-white);
+    height: 10rem !important;
+}
+
 /* AUTHORS */
 
 .authors__container {
@@ -488,5 +494,7 @@ input, select, textarea {
 .dashboard__post-actions {
     display: flex;
     gap: 1rem;
-    
+
 }
+
+
