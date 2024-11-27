@@ -448,9 +448,9 @@ input, select, textarea {
     margin-top: 1.5rem;
 }
 
-/* .form.profile__form {
+.profile__form {
     margin-top: 3rem;
     margin-inline: auto;
     width: var(--form-width);
-} */
+}
 
