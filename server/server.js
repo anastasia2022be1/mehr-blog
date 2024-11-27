@@ -2,6 +2,9 @@ import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 
+import userRoutes from './routes/userRoutes.js'
+import postRoutes from './routes/postRoutes.js'
+
 // Подключение к MongoDB
 mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log("Connected to MongoDB"))
@@ -9,8 +12,13 @@ mongoose.connect(process.env.MONGO_URI)
 
 const app = express();
 
-app.use(cors());
+
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }))
+app.use(cors({ credentials: true, origin: 'http://localhost:3000' }))
+
+app.use("/api/users", userRoutes)
+app.use("/api/posts", postRoutes)
 
 const port = process.env.PORT || 5000;
 
