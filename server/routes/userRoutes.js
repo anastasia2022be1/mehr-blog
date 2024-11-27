@@ -4,17 +4,23 @@ import { registerUser, loginUser, getUser, editUser, getAuthors, changeAvatar } 
 
 const router = express.Router();
 
-router.post("/register", registerUser)
+// Register new user
+router.post('/register', registerUser);
 
-router.post("/login", loginUser)
+// Login user
+router.post('/login', loginUser);
 
-router.get('/:id', getUser)
+// Get user profile
+router.get('/:id', getUser);  // Use GET for profile
 
-router.get('/', getAuthors)
+// Change user avatar
+router.post('/change-avatar', changeAvatar);
 
-router.post('/change-avatar', changeAvatar)
+// Edit user details
+router.patch('/edit-user', editUser);  // Use PUT for editing user details
 
-router.patch('edit-user', editUser)
+// Get all authors (no authentication required)
+router.get('/', getAuthors);  // Use GET for authors
 
 
 export default router;

@@ -5,6 +5,8 @@ import mongoose from "mongoose";
 import userRoutes from './routes/userRoutes.js'
 import postRoutes from './routes/postRoutes.js'
 
+import { notFound, errorMiddleware } from './middleware/errorMiddleware.js'
+
 // Подключение к MongoDB
 mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log("Connected to MongoDB"))
@@ -19,6 +21,12 @@ app.use(cors({ credentials: true, origin: 'http://localhost:3000' }))
 
 app.use("/api/users", userRoutes)
 app.use("/api/posts", postRoutes)
+
+// Middleware для обработки несуществующих маршрутов
+app.use(notFound);
+
+// Middleware для обработки ошибок
+app.use(errorMiddleware);
 
 const port = process.env.PORT || 5000;
 
