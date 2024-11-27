@@ -2,38 +2,62 @@ import { Link } from 'react-router-dom';
 import Logo from "../images/logo.png";
 import { FaBars } from "react-icons/fa";
 import { AiOutlineClose } from "react-icons/ai";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const Header = () => {
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(window.innerWidth > 800);
 
-  const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
+  // Обработчик изменения размера окна
+  useEffect(() => {
+    const handleResize = () => {
+      setMenuOpen(window.innerWidth > 800); 
+    };
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+   // Функция для закрытия меню
+  const closeMenu = () => {
+    if (window.innerWidth < 800) {
+      setMenuOpen(false);
+    }
   };
 
   return (
     <nav>
       <div className="container nav__container">
-        <Link to="/" className="nav__logo">
+        {/* Логотип */}
+        <Link to="/" className="nav__logo" onClick={closeMenu}>
           <img src={Logo} alt="Navbar Logo" />
         </Link>
-        
-        <ul className={`nav__menu ${menuOpen ? "show-menu" : ""}`}>
+
+        {/* Меню */}
+        {menuOpen && 
+          <ul className={`nav__menu ${menuOpen ? "show-menu" : ""}`}>
           <li>
-            <Link to="/profile">Anastasia Sevastianova</Link>
+            <Link to="/profile" onClick={closeMenu} >Anastasia Sevastianova</Link>
           </li>
           <li>
-            <Link to="/create">Create Post</Link>
+            <Link to="/create" onClick={closeMenu}>Create Post</Link>
           </li>
           <li>
-            <Link to="/authors">Authors</Link>
+            <Link to="/authors" onClick={closeMenu}>Authors</Link>
           </li>
           <li>
-            <Link to="/logout">Logout</Link>
+            <Link to="/logout" onClick={closeMenu}>Logout</Link>
           </li>
         </ul>
+}
+        
 
-        <button className="nav__toggle-btn" onClick={toggleMenu}>
+        {/* Кнопка переключения */}
+        <button
+          className="nav__toggle-btn"
+          onClick={() => setMenuOpen((prev) => !prev)}
+        >
           {menuOpen ? <AiOutlineClose /> : <FaBars />}
         </button>
       </div>
