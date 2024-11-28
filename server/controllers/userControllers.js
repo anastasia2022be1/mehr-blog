@@ -101,7 +101,8 @@ export const getUser = async (req, res, next) => {
         res.status(200).json(user)
 
     } catch (error) {
-        return next(new HttpError(error))
+        return next(new HttpError('An error occurred while fetching the user', 500));
+
     }
 }
 
@@ -132,5 +133,10 @@ export const editUser = async (req, res, next) => {
 
 
 export const getAuthors = async (req, res, next) => {
-    res.json('All authors')
+    try {
+        const authors = await User.find().select('-password')
+        res.json(authors)
+    } catch (error) {
+        return next(new HttpError(error))
+    }
 }
