@@ -1,6 +1,10 @@
 import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
+// import multer from "multer";
+import fileUpload from "express-fileupload";
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 import userRoutes from './routes/userRoutes.js'
 import postRoutes from './routes/postRoutes.js'
@@ -14,10 +18,16 @@ mongoose.connect(process.env.MONGO_URI)
 
 const app = express();
 
+// Воссоздаем __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
+// const upload = multer({ dest: 'uploads/' });
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
-app.use(cors({ credentials: true, origin: 'http://localhost:3000' }))
+app.use(cors({ credentials: true, origin: 'http://localhost:5173' }))
+app.use(fileUpload());
+app.use('/upload', express.static(path.join(__dirname, 'uploads')));
 
 app.use("/api/users", userRoutes)
 app.use("/api/posts", postRoutes)

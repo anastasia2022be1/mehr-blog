@@ -11,6 +11,21 @@ const UserProfile = () => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
+
+//   const formData = new FormData();
+// formData.append('profilePicture', fileInput.files[0]);
+
+// fetch('http://localhost:3000/api/users/change-avatar', {
+//   method: 'POST',
+//   headers: {
+//     Authorization: `Bearer ${userToken}`, // Добавьте токен пользователя
+//   },
+//   body: formData,
+// })
+//   .then((response) => response.json())
+//   .then((data) => console.log(data))
+//   .catch((err) => console.error('Error:', err));
+
  
 
   return (

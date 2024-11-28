@@ -1,8 +1,18 @@
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
+import multer from "multer";
+
+import fs from 'fs';
+import path from 'path';
+import { v4 as uuidv4 } from 'uuid';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
 import HttpError from "../models/errorModel.js"
 import User from "../models/userModel.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 // register a new user
 // POST: api/users/register
@@ -29,6 +39,7 @@ export const registerUser = async (req, res, next) => {
             return next(new HttpError('Passwords do not match', 422))
         }
 
+        console.log("Received user data:", req.body);
         // Hashed password
         const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -38,6 +49,7 @@ export const registerUser = async (req, res, next) => {
             password: hashedPassword
         })
 
+        console.log("New user created:", newUser);
         res.status(201).json(`newUser ${newUser.email} registered`)
 
     } catch (error) {
@@ -86,6 +98,8 @@ export const loginUser = async (req, res, next) => {
 
 //-----------------------------------
 
+
+
 //user profile
 // POST: api/users/:id
 // protected
@@ -112,9 +126,66 @@ export const getUser = async (req, res, next) => {
 // POST: api/users/change-avatar
 // protected
 
+// изменение аватара пользователя
+// POST: api/users/change-avatar
+// защищено
+
 export const changeAvatar = async (req, res, next) => {
-    res.json('Change user avatar')
-}
+    try {
+        if (!req.files || !req.files.avatar) {
+            return next(new HttpError("No file uploaded", 400));  // Возвращаем ошибку, если файл не передан
+        }
+
+        const user = await User.findById(req.user.id);
+        if (!user) {
+            return next(new HttpError('User not found', 404));  // Возвращаем ошибку, если пользователь не найден
+        }
+
+        // Удаляем старый аватар
+        if (user.avatar) {
+            fs.unlink(path.join(__dirname, '..', 'uploads', user.avatar), (err) => {
+                if (err) {
+                    return next(new HttpError('Failed to delete old avatar', 500));  // Обработка ошибки при удалении старого аватара
+                }
+            });
+        }
+
+        const { avatar } = req.files;
+
+        // Проверка размера файла
+        if (avatar.size > 500000) {  // Ограничение на размер файла 500KB
+            return next(new HttpError('Profile picture is too large, max 500KB allowed', 400));
+        }
+
+        let fileName = avatar.name;
+        let splittedFileName = fileName.split('.');
+        let newFileName = uuidv4() + '.' + splittedFileName[splittedFileName.length - 1]; // Генерация уникального имени для файла
+
+        avatar.mv(path.join(__dirname, '..', 'uploads', newFileName), async (err) => {
+            if (err) {
+                return next(new HttpError('Failed to upload avatar', 500));  // Ошибка при загрузке аватара
+            }
+
+            // Обновляем информацию о пользователе с новым аватаром
+            const updatedAvatar = await User.findByIdAndUpdate(
+                req.user.id,
+                { avatar: newFileName },
+                { new: true }
+            );
+
+            if (!updatedAvatar) {
+                return next(new HttpError('Avatar couldn\'t be updated', 422));  // Ошибка при обновлении аватара
+            }
+
+            res.status(200).json(updatedAvatar);  // Отправляем обновленные данные пользователя с новым аватаром
+        });
+    } catch (error) {
+        return next(new HttpError(error.message, 500));  // Ошибка в процессе выполнения
+    }
+};
+
+
+
 
 //--------------------------------------------------
 
