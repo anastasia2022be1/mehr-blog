@@ -194,38 +194,6 @@ export const changeAvatar = async (req, res, next) => {
 // edit user details
 // POST: api/users/edit-user
 
-// export const editUser = async (req, res, next) => {
-//     try {
-//         const { name, email, currentPassword, newPassword, newConfirmPassword } = req.body;
-//         if (!name || !email || !currentPassword || !newPassword) {
-//             return next(new HttpError('Fill in all fields', 422))
-//         }
-
-//         // get user from database
-//         const user = await User.findById(req.user.id);
-//         if (!user) {
-//             return next(new HttpError('User not found', 403))
-//         }
-
-//         const emailExist = await User.findById({ email })
-//         if (emailExist._id != req.user.id) {
-//             return next(new HttpError('Email already exist', 422))
-//         }
-
-//         const validateUserPassword = await bcrypt.compare(currentPassword, user.password);
-
-//         if (!validateUserPassword) {
-//             return next(new HttpError('Invalid current password', 422))
-//         }
-
-//         if (newPassword !== newConfirmPassword) {
-//             return next(new HttpError('New password do not match', 422))
-//         }
-//     } catch (error) {
-//         return next(new HttpError(error));
-//     }
-// }
-
 export const editUser = async (req, res, next) => {
     try {
         const { name, email, currentPassword, newPassword, newConfirmPassword } = req.body;
