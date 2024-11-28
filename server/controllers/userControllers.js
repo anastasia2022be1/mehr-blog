@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
 
 import HttpError from "../models/errorModel.js"
 import User from "../models/userModel.js";
@@ -39,9 +40,8 @@ export const registerUser = async (req, res, next) => {
 
         res.status(201).json(`newUser ${newUser.email} registered`)
 
-
     } catch (error) {
-        return next(new HttpError('User ragistartion failed', 422))
+        return next(new HttpError('User registartion failed', 422))
     }
 }
 
@@ -51,7 +51,37 @@ export const registerUser = async (req, res, next) => {
 // POST: api/users/login
 
 export const loginUser = async (req, res, next) => {
-    res.json('Login user')
+    try {
+        const { email, password } = req.body;
+
+        if (!email || !password) {
+            return next(new HttpError('Fill in all fields', 422))
+        }
+
+        const newEmail = email.toLowerCase();
+
+        const user = await User.findOne({ email: newEmail })
+
+        if (!user) {
+            return next(new HttpError('Invalid credentials', 422))
+        }
+
+        const passwordCorrect = await bcrypt.compare(password, user.password);
+
+        if (!passwordCorrect) {
+            return res.status(401).json({ error: 'Invalid credentials' });
+        }
+
+        const { _id: id, name } = user;
+
+        const token = jwt.sign({ email, id }, process.env.JWT_SECRET_KEY, { expiresIn: "1d" });
+
+        res.status(200).json({ token, id, name })
+
+
+    } catch (error) {
+        return next(new HttpError('Login failed. Please check your credentials', 422))
+    }
 }
 
 //-----------------------------------
