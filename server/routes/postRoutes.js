@@ -9,14 +9,16 @@ import {
     deletePost,
 } from '../controllers/postControllers.js';
 
+import authMiddleware from "../middleware/authMiddleware.js";
+
 const router = express.Router();
 
-router.post("/", createPost); // Создать пост
+router.post("/", authMiddleware, createPost); // Создать пост
 router.get("/", getAllPosts); // Получить все посты
 router.get("/:id", getPostById); // Получить пост по ID
 router.get("/categories/:category", getPostsByCategory); // Получить посты по категории
 router.get("/users/:id", getPostsByUser); // Получить посты пользователя (изменено)
-router.patch("/:id", updatePost); // Обновить пост
-router.delete("/:id", deletePost); // Удалить пост
+router.patch("/:id", authMiddleware, updatePost); // Обновить пост
+router.delete("/:id", authMiddleware, deletePost); // Удалить пост
 
 export default router;

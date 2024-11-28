@@ -1,28 +1,78 @@
+import { v4 as uuidv4 } from 'uuid';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import HttpError from '../models/errorModel.js';
-import postModel from '../models/postModel.js'
+import Post from '../models/postModel.js';
+import User from '../models/userModel.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Создание поста
+
 export const createPost = async (req, res, next) => {
     try {
-        const { title, content, category, userId } = req.body;
+        const { title, category, description } = req.body;
 
-        if (!title || !content || !category || !userId) {
+        // Проверка обязательных полей
+        if (!title || !description || !category || !req.files || !req.files.thumbnail) {
             return next(new HttpError('All fields are required', 422));
         }
 
-        const newPost = new Post({
-            title,
-            content,
-            category,
-            userId,
-        });
+        const { thumbnail } = req.files;
 
-        await newPost.save();
-        res.status(201).json({ message: 'Post created successfully', post: newPost });
+        // Проверка размера файла
+        if (thumbnail.size > 2000000) {
+            return next(new HttpError('Thumbnail too big. File should be less than 2MB', 422));
+        }
+
+        // Генерация уникального имени файла
+        const fileName = thumbnail.name;
+        const fileExtension = fileName.split('.').pop();
+        const newFileName = `${uuidv4()}.${fileExtension}`;
+
+        // Перемещение файла в папку uploads
+        const uploadPath = path.join(__dirname, '..', 'uploads', newFileName);
+        thumbnail.mv(uploadPath, async (err) => {
+            if (err) {
+                return next(new HttpError('Failed to upload thumbnail', 500));
+            }
+
+            try {
+                // Создание нового поста
+                const newPost = await Post.create({
+                    title,
+                    description,
+                    category,
+                    thumbnail: newFileName,
+                    creator: req.user.id,
+                });
+
+                if (!newPost) {
+                    return next(new HttpError('Could not create post', 422));
+                }
+
+                // Обновление количества постов пользователя
+                const currentUser = await User.findById(req.user.id);
+                if (currentUser) {
+                    currentUser.posts = (currentUser.posts || 0) + 1;
+                    await currentUser.save();
+                }
+
+                // Успешный ответ
+                res.status(201).json({
+                    message: 'Post created successfully',
+                    post: newPost,
+                });
+            } catch (error) {
+                return next(new HttpError(error.message || 'Could not create post', 500));
+            }
+        });
     } catch (error) {
         return next(new HttpError(error.message || 'Could not create post', 500));
     }
 };
+
 
 // Получение всех постов
 export const getAllPosts = async (req, res, next) => {
