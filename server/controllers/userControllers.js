@@ -8,7 +8,7 @@ import User from "../models/userModel.js";
 
 export const registerUser = async (req, res, next) => {
     try {
-        const { name, email, password, passwors2 } = req.body;
+        const { name, email, password, password2 } = req.body;
         if (!name || !email || !password) {
             return next(new HttpError('Fill in all fields', 422))
         }
@@ -24,8 +24,8 @@ export const registerUser = async (req, res, next) => {
             return next(new HttpError('Password should be at least 6 characters', 422))
         }
 
-        if (password != passwors2) {
-            return next(new HttpError('Password do not match', 422))
+        if (password != password2) {
+            return next(new HttpError('Passwords do not match', 422))
         }
 
         // Hashed password
@@ -37,7 +37,7 @@ export const registerUser = async (req, res, next) => {
             password: hashedPassword
         })
 
-        res.status(201).json(newUser)
+        res.status(201).json(`newUser ${newUser.email} registered`)
 
 
     } catch (error) {
