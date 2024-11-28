@@ -14,6 +14,8 @@ import User from "../models/userModel.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+//--------------------------------------------------------
+
 // register a new user
 // POST: api/users/register
 
@@ -192,9 +194,87 @@ export const changeAvatar = async (req, res, next) => {
 // edit user details
 // POST: api/users/edit-user
 
+// export const editUser = async (req, res, next) => {
+//     try {
+//         const { name, email, currentPassword, newPassword, newConfirmPassword } = req.body;
+//         if (!name || !email || !currentPassword || !newPassword) {
+//             return next(new HttpError('Fill in all fields', 422))
+//         }
+
+//         // get user from database
+//         const user = await User.findById(req.user.id);
+//         if (!user) {
+//             return next(new HttpError('User not found', 403))
+//         }
+
+//         const emailExist = await User.findById({ email })
+//         if (emailExist._id != req.user.id) {
+//             return next(new HttpError('Email already exist', 422))
+//         }
+
+//         const validateUserPassword = await bcrypt.compare(currentPassword, user.password);
+
+//         if (!validateUserPassword) {
+//             return next(new HttpError('Invalid current password', 422))
+//         }
+
+//         if (newPassword !== newConfirmPassword) {
+//             return next(new HttpError('New password do not match', 422))
+//         }
+//     } catch (error) {
+//         return next(new HttpError(error));
+//     }
+// }
+
 export const editUser = async (req, res, next) => {
-    res.json('Edit user details')
-}
+    try {
+        const { name, email, currentPassword, newPassword, newConfirmPassword } = req.body;
+
+        // Проверка обязательных полей
+        if (!name || !email || !currentPassword || !newPassword) {
+            return next(new HttpError('Please fill in all fields', 422));
+        }
+
+        // Получение пользователя из базы данных
+        const user = await User.findById(req.user.id);
+        if (!user) {
+            return next(new HttpError('User not found', 403));
+        }
+
+        // Проверка уникальности email
+        const emailExist = await User.findOne({ email });
+        if (emailExist && emailExist._id.toString() !== req.user.id) {
+            return next(new HttpError('Email already exists', 422));
+        }
+
+        // Проверка текущего пароля
+        const validateUserPassword = await bcrypt.compare(currentPassword, user.password);
+        if (!validateUserPassword) {
+            return next(new HttpError('Invalid current password', 422));
+        }
+
+        // Проверка совпадения нового пароля и подтверждения
+        if (newPassword !== newConfirmPassword) {
+            return next(new HttpError('New passwords do not match', 422));
+        }
+
+        // Обновление данных пользователя
+        user.name = name;
+        user.email = email;
+        if (newPassword) {
+            user.password = await bcrypt.hash(newPassword, 10);
+        }
+
+        // Сохранение изменений
+        await user.save();
+
+        // Успешный ответ
+        res.status(200).json({ message: 'User updated successfully', user });
+    } catch (error) {
+        return next(new HttpError(error.message || 'Something went wrong', 500));
+    }
+};
+
 
 //-------------------------------------
 

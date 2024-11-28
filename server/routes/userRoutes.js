@@ -26,7 +26,7 @@ router.get('/:id', getUser);  // Use GET for profile
 router.post('/change-avatar', authMiddleware, changeAvatar);
 
 // Edit user details
-router.patch('/edit-user', editUser);  // Use PUT for editing user details
+router.patch('/edit-user', authMiddleware, editUser);  // Use PUT for editing user details
 
 // Get all authors (no authentication required)
 router.get('/', getAuthors);  // Use GET for authors
