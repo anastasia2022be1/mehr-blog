@@ -1,8 +1,10 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Avatar from "../images/Avatar.png";
 import { FaEdit } from "react-icons/fa";
 import { FaCheck } from "react-icons/fa";
+import { useContext } from "react";
+import { UserContext } from "../context/userContext.jsx";
 
 const UserProfile = () => {
   const [avatar, setAvatar] = useState(Avatar);
@@ -11,6 +13,16 @@ const UserProfile = () => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
+
+    const navigate = useNavigate()
+  const { currentUser } = useContext(UserContext);
+  const token = currentUser?.token;
+
+  useEffect(() => {
+    if (!token) {
+      navigate('/login')
+    }
+  }, [])
 
 //   const formData = new FormData();
 // formData.append('profilePicture', fileInput.files[0]);

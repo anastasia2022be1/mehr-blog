@@ -77,8 +77,8 @@ export const createPost = async (req, res, next) => {
 // Получение всех постов
 export const getAllPosts = async (req, res, next) => {
     try {
-        const posts = await Post.find();
-        res.json(posts);
+        const posts = await Post.find().sort({ updateAt: -1 });
+        res.status(200).json(posts);
     } catch (error) {
         return next(new HttpError(error.message || 'Could not retrieve posts', 500));
     }
