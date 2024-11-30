@@ -77,13 +77,13 @@ export const loginUser = async (req, res, next) => {
         const user = await User.findOne({ email: newEmail })
 
         if (!user) {
-            return next(new HttpError('Invalid credentials', 422))
+            return next(new HttpError('Email not found', 422))
         }
 
         const passwordCorrect = await bcrypt.compare(password, user.password);
 
         if (!passwordCorrect) {
-            return res.status(401).json({ error: 'Invalid credentials' });
+            return res.status(401).json({ error: 'Wrong password' });
         }
 
         const { _id: id, name } = user;
@@ -161,7 +161,7 @@ export const changeAvatar = async (req, res, next) => {
 
         let fileName = avatar.name;
         let splittedFileName = fileName.split('.');
-        let newFileName = uuidv4() + '.' + splittedFileName[splittedFileName.length - 1]; // Генерация уникального имени для файла
+        let newFileName = splittedFileName[0] + uuidv4() + '.' + splittedFileName[splittedFileName.length - 1]; // Генерация уникального имени для файла
 
         avatar.mv(path.join(__dirname, '..', 'uploads', newFileName), async (err) => {
             if (err) {

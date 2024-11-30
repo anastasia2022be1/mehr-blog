@@ -1,7 +1,9 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
 import "./index.css";
+
 import Layout from "./components/Layout.jsx";
 import ErrorPage from "./pages/ErrorPage.jsx";
 import Home from "./pages/Home.jsx";

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { DUMMY_POSTS } from '../data.js'
 import PostItem from '../components/PostItem.jsx'
 
