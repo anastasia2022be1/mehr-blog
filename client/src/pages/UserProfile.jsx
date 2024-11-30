@@ -22,7 +22,7 @@ const UserProfile = () => {
     if (!token) {
       navigate('/login')
     }
-  }, [])
+  }, []);
 
 //   const formData = new FormData();
 // formData.append('profilePicture', fileInput.files[0]);

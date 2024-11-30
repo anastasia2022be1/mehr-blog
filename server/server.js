@@ -27,7 +27,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
 app.use(cors({ credentials: true, origin: 'http://localhost:5173' }))
 app.use(fileUpload());
-app.use('/upload', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use("/api/users", userRoutes)
 app.use("/api/posts", postRoutes)

@@ -11,7 +11,7 @@ const DeletePost = () => {
     if (!token) {
       navigate('/login')
     }
-  }, [])
+  }, []);
   return (
     <div>DeletePost</div>
   )
