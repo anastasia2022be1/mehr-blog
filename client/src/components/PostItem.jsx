@@ -16,7 +16,7 @@ const PostItem = ({
   const postTitle =
     title && title.length > 30 ? title.slice(0, 30) + "..." : title;
   
-  console.log("Creator:", creator);
+  // console.log("Creator:", creator);
 
 
   return (
