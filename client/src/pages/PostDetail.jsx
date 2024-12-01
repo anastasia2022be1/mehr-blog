@@ -40,14 +40,6 @@ const PostDetail = () => {
     return <Loader />;
   }
 
-  // Если произошла ошибка
-  // if (error) {
-  //   return (
-  //     <section className="post-detail">
-  //       <p className="error">{error}</p>
-  //     </section>
-  //   );
-  // }
   return (
     <section className="post-detail">
       {error && <p className='error'>{error }</p>}
@@ -55,7 +47,7 @@ const PostDetail = () => {
         <div className="post-detail__header">
           <PostAuthor authorID={post.creator} createdAt={post.createdAt} />
           {currentUser?.id == post?.creator && <div className="post-detail__btns">
-            <Link to={`/posts/werwer/edit`} className='btn sm primary'>Edit</Link>
+            <Link to={`/posts/${post?._id}/edit`} className='btn sm primary'>Edit</Link>
           <DeletePost postId={id} />
           </div>}
   
