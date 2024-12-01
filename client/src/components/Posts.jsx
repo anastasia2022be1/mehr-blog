@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
-
 import PostItem from "./PostItem.jsx";
 import Loader from "./Loader.jsx";
 
 const Posts = () => {
   const [posts, setPosts] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
+  // getPosts
+  // api/posts
   useEffect(() => {
     const fetchPosts = async () => {
       setIsLoading(true);
@@ -34,16 +35,16 @@ const Posts = () => {
     <section className="posts">
       {Array.isArray(posts) && posts.length > 0 ? (
         <div className="container posts__container">
-          {posts.map((post, index) => (
+          {posts.map(({_id:id, thumbnail, category, description, creator, createdAt, title}) => (
             <PostItem
-              key={post.id || index}
-              postID={post.id}
-              thumbnail={post.thumbnail}
-              category={post.category}
-              title={post.title}
-              desc={post.desc}
-              authorID={post.authorID}
-              createdAt={post.createdAt}
+              key={id}
+              postID={id}
+              thumbnail={thumbnail}
+              category={category}
+              title={title}
+              description={description}
+              creator={creator}
+              createdAt={createdAt}
             />
           ))}
         </div>

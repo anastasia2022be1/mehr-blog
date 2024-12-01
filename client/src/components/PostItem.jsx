@@ -6,15 +6,18 @@ const PostItem = ({
   postID,
   category,
   title,
-  desc,
-  authorID,
+  description,
+  creator,
   thumbnail,
-  createdAt,
+  createdAt
 }) => {
   const shortDesc =
-    desc && desc.length > 145 ? desc.slice(0, 145) + "..." : desc;
+    description && description.length > 145 ? description.slice(0, 145) + "..." : description;
   const postTitle =
     title && title.length > 30 ? title.slice(0, 30) + "..." : title;
+  
+  console.log("Creator:", creator);
+
 
   return (
     <article className="post">
@@ -27,7 +30,7 @@ const PostItem = ({
         </Link>
         <p>{shortDesc}</p>
         <div className="post__footer">
-          <PostAuthor authorID={authorID} createdAt={createdAt} />
+          <PostAuthor authorID={creator} createdAt={createdAt} />
           <Link to={`/posts/categories/${category}`} className="btn category">
             {category}
           </Link>
