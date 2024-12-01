@@ -42,7 +42,7 @@ const Header = () => {
           <ul className={`nav__menu ${menuOpen ? "show-menu" : ""}`}>
             <li>
               <Link to="/profile" onClick={closeMenu}>
-                Anastasia Sevastianova
+                {currentUser?.name}
               </Link>
             </li>
             <li>
