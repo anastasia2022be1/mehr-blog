@@ -138,6 +138,11 @@ export const updatePost = async (req, res, next) => {
             );
         }
 
+        console.log('Request body:', req.body);
+        console.log('Request files:', req.files);
+        console.log('Request params:', req.params);
+
+
         const oldPost = await Post.findById(postId);
         if (!oldPost) {
             return next(new HttpError('Post not found', 404));
@@ -202,7 +207,7 @@ export const updatePost = async (req, res, next) => {
 
         res.status(200).json({ message: 'Post successfully updated', updatedPost });
     } catch (error) {
-        console.error('Ошибка при обновлении поста:', error);
+        console.error('Update Post Error:', error);
         return next(new HttpError(error.message || 'Could not update the post', 500));
     }
 };
