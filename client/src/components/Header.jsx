@@ -41,7 +41,7 @@ const Header = () => {
         {currentUser?.id && menuOpen && (
           <ul className={`nav__menu ${menuOpen ? "show-menu" : ""}`}>
             <li>
-              <Link to="/profile" onClick={closeMenu}>
+              <Link to={`/profile/${currentUser.id}`} onClick={closeMenu}>
                 {currentUser?.name}
               </Link>
             </li>

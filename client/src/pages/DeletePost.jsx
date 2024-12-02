@@ -1,10 +1,12 @@
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { UserContext } from '../context/userContext.jsx';
+import Loader from '../components/Loader.jsx';
 
 const DeletePost = ({ postId }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [isLoading, setIsLoading] = useState(false);
 
   const { currentUser } = useContext(UserContext);
   const token = currentUser?.token;
@@ -16,6 +18,7 @@ const DeletePost = ({ postId }) => {
   }, [token, navigate]);
 
   const removePost = async () => {
+    setIsLoading(true)
     try {
       const response = await fetch(`http://localhost:5000/api/posts/${postId}`, {
         method: 'DELETE',
@@ -35,11 +38,17 @@ const DeletePost = ({ postId }) => {
       } else {
         navigate('/'); // Переход на главную страницу
       }
+
+      setIsLoading(false);
     } catch (error) {
       console.error('Error deleting post:', error.message);
       alert(`Error: ${error.message}`);
     }
   };
+
+  if (isLoading) {
+    return <Loader />
+  }
 
   return (
     <Link className='btn sm danger' onClick={(e) => {
