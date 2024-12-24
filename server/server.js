@@ -29,7 +29,6 @@ const __dirname = path.dirname(__filename);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
 app.use(cors({ credentials: true, origin: process.env.CLIENT_URL }));
-// https://mehr-blog-2.onrender.com
 
 app.use(fileUpload());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
