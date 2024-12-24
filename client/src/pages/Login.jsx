@@ -15,7 +15,7 @@ const Login = () => {
 
   const { setCurrentUser } = useContext(UserContext);
 
-  const app_base_url = process.env.REACT_APP_BASE_URL;
+  const app_base_url = import.meta.env.VITE_APP_BASE_URL;
 
   function changeInputHandler(e) {
     setUserData(prevState => {

@@ -11,7 +11,7 @@ const PostItem = ({
   createdAt,
 }) => {
 
-  const assets = process.env.REACT_APP_ASSETS_URL;
+  const assets = import.meta.env.VITE_APP_ASSETS_URL;
 
   const shortDesc =
     description && description.length > 145

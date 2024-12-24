@@ -6,7 +6,8 @@ const Posts = () => {
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const app_base_url = process.env.REACT_APP_BASE_URL;
+  const app_base_url = import.meta.env.VITE_APP_BASE_URL;
+  console.log("Base URL:", app_base_url);
 
   // getPosts
   // api/posts

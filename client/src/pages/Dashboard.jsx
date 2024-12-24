@@ -10,11 +10,12 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const { id } = useParams()
   
-  const assets = process.env.REACT_APP_ASSETS_URL;
-  const app_base_url = process.env.REACT_APP_BASE_URL;
-
+  
   const { currentUser } = useContext(UserContext);
   const token = currentUser?.token;
+  
+  const assets = import.meta.env.VITE_APP_ASSETS_URL;
+  const app_base_url = import.meta.env.VITE_APP_BASE_URL;
 
   useEffect(() => {
     if (!token) {

@@ -26,8 +26,8 @@ const UserProfile = () => {
     }
   }, [navigate, token]);
 
-  const assets = process.env.REACT_APP_ASSETS_URL;
-  const app_base_url = process.env.REACT_APP_BASE_URL;
+  const assets = import.meta.env.VITE_APP_ASSETS_URL;
+  const app_base_url = import.meta.env.VITE_APP_BASE_URL;
 
   useEffect(() => {
     const getUser = async () => {

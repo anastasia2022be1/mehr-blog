@@ -8,7 +8,7 @@ const DeletePost = ({ postId }) => {
   const location = useLocation();
   const [isLoading, setIsLoading] = useState(false);
 
-  const app_base_url = process.env.REACT_APP_BASE_URL;
+  const app_base_url = import.meta.env.VITE_APP_BASE_URL;
 
   const { currentUser } = useContext(UserContext);
   const token = currentUser?.token;

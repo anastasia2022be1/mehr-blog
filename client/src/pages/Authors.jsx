@@ -7,8 +7,8 @@ const Authors = () => {
   const [isLoading, setIsLoading] = useState(false); // Состояние для индикатора загрузки
   const [error, setError] = useState(null); // Состояние для ошибок
 
-  const assets = process.env.REACT_APP_ASSETS_URL;
-  const app_base_url = process.env.REACT_APP_BASE_URL;
+  const assets = import.meta.env.VITE_APP_ASSETS_URL;
+  const app_base_url = import.meta.env.VITE_APP_BASE_URL;
 
   useEffect(() => {
     const getAuthors = async () => {

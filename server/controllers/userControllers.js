@@ -1,6 +1,5 @@
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
-import multer from "multer";
 
 import fs from 'fs';
 import path from 'path';

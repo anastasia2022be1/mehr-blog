@@ -17,7 +17,7 @@ const EditPost = () => {
   const { currentUser } = useContext(UserContext);
   const token = currentUser?.token;
 
-  const app_base_url = process.env.REACT_APP_BASE_URL;
+  const app_base_url = import.meta.env.VITE_APP_BASE_URL;
 
   useEffect(() => {
     if (!token) {

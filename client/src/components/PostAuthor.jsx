@@ -11,8 +11,9 @@ TimeAgo.addLocale(ru)
 
 const PostAuthor = ({ authorID, createdAt }) => {
   const [author, setAuthor] = useState({});
-  const assets = process.env.REACT_APP_ASSETS_URL;
-  const app_base_url = process.env.REACT_APP_BASE_URL;
+  
+  const assets = import.meta.env.VITE_APP_ASSETS_URL;
+  const app_base_url = import.meta.env.VITE_APP_BASE_URL;
 
  useEffect(() => {
    if (!authorID) return;
