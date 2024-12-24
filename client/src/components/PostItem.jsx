@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import PostAuthor from "./PostAuthor.jsx";
 
@@ -9,26 +8,30 @@ const PostItem = ({
   description,
   creator,
   thumbnail,
-  createdAt
+  createdAt,
 }) => {
+
+  const assets = process.env.REACT_APP_ASSETS_URL;
+
   const shortDesc =
-    description && description.length > 145 ? description.slice(0, 145) + "..." : description;
+    description && description.length > 145
+      ? description.slice(0, 145) + "..."
+      : description;
   const postTitle =
     title && title.length > 30 ? title.slice(0, 30) + "..." : title;
-  
-  // console.log("Creator:", creator);
 
+  // console.log("Creator:", creator);
 
   return (
     <article className="post">
       <div className="post__thumbnail">
-        <img src={`http://localhost:5000/uploads/${thumbnail}`} alt={title} />
+        <img src={`${assets}/uploads/${thumbnail}`} alt={title} />
       </div>
       <div className="post__content">
         <Link to={`/posts/${postID}`}>
           <h3>{postTitle}</h3>
         </Link>
-        <p dangerouslySetInnerHTML={{__html:shortDesc}}/>
+        <p dangerouslySetInnerHTML={{ __html: shortDesc }} />
         <div className="post__footer">
           <PostAuthor authorID={creator} createdAt={createdAt} />
           <Link to={`/posts/categories/${category}`} className="btn category">

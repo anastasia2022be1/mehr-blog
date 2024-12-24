@@ -11,13 +11,15 @@ TimeAgo.addLocale(ru)
 
 const PostAuthor = ({ authorID, createdAt }) => {
   const [author, setAuthor] = useState({});
+  const assets = process.env.REACT_APP_ASSETS_URL;
+  const app_base_url = process.env.REACT_APP_BASE_URL;
 
  useEffect(() => {
-  if (!authorID) return;
+   if (!authorID) return;
 
   const getAuthor = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/users/${authorID}`);
+      const response = await fetch(`${app_base_url}/users/${authorID}`);
       if (!response.ok) {
         throw new Error(`Error: ${response.statusText}`);
       }
@@ -35,7 +37,7 @@ const PostAuthor = ({ authorID, createdAt }) => {
   return (
       <Link to={`/posts/users/${authorID}`} className='post__author'>
           <div className="post__author-avatar">
-              <img src={`http://localhost:5000/uploads/${author?.avatar}`} alt={author?.name} />
+              <img src={`${assets}/uploads/${author?.avatar}`} alt={author?.name} />
           </div>
           <div className="post__author-details">
               <h5>By: {author?.name}</h5>

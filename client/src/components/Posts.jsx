@@ -6,13 +6,15 @@ const Posts = () => {
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  const app_base_url = process.env.REACT_APP_BASE_URL;
+
   // getPosts
   // api/posts
   useEffect(() => {
     const fetchPosts = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch("http://localhost:5000/api/posts");
+        const response = await fetch(`${app_base_url}/posts`);
         if (!response.ok) {
           throw new Error(`Error: ${response.statusText}`);
         }
