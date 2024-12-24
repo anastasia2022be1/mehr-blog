@@ -30,7 +30,7 @@ The frontend of the Mehr Blog project is built with React.js and provides a user
 
 4. Start the development server:
    ```bash
-   npm start
+   npm run dev
    ```
 
 The application will run on `http://localhost:5000` by default.

@@ -32,7 +32,7 @@ The Mehr Blog project is a full-stack application consisting of a frontend built
 
 4. Start the development server:
    ```bash
-   npm start
+   npm run dev
    ```
 
 The application will run on `http://localhost:5000` by default.
