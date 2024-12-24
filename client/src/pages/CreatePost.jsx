@@ -11,6 +11,8 @@ const CreatePost = () => {
   const [thumbnail, setThumbnail] = useState("");
   const [errorMessage, setErrorMessage] = useState(""); // Для ошибок
 
+  const app_base_url = process.env.REACT_APP_BASE_URL;
+
   const navigate = useNavigate();
   const { currentUser } = useContext(UserContext);
   const token = currentUser?.token;
@@ -54,7 +56,7 @@ const CreatePost = () => {
     postData.set('thumbnail', thumbnail);
 
     try {
-      const response = await fetch('http://localhost:5000/api/posts', {
+      const response = await fetch(`${app_base_url}/posts`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,

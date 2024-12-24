@@ -14,12 +14,15 @@ const PostDetail = () => {
 
   const { currentUser } = useContext(UserContext); // Текущий пользователь из контекста
 
+  const assets = process.env.REACT_APP_ASSETS_URL;
+  const app_base_url = process.env.REACT_APP_BASE_URL;
+
   // Функция для получения данных поста
   useEffect(() => {
     const getPost = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch(`http://localhost:5000/api/posts/${id}`);
+        const response = await fetch(`${app_base_url}/posts/${id}`);
         if (!response.ok) {
           throw new Error(`Error fetching post: ${response.statusText}`);
         }
@@ -56,7 +59,7 @@ const PostDetail = () => {
 
         <h1>{post.title}</h1>
         <div className="post-detail__thumbnail">
-          <img src={`http://localhost:5000/uploads/${post.thumbnail}`} alt="" />
+          <img src={`${assets}/uploads/${post.thumbnail}`} alt="" />
         </div>
         <p >{post.description}</p>
        

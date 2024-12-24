@@ -26,11 +26,14 @@ const UserProfile = () => {
     }
   }, [navigate, token]);
 
+  const assets = process.env.REACT_APP_ASSETS_URL;
+  const app_base_url = process.env.REACT_APP_BASE_URL;
+
   useEffect(() => {
     const getUser = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/users/${currentUser.id}`,
+          `${app_base_url}/users/${currentUser.id}`,
           {
             method: "GET",
             headers: {
@@ -61,7 +64,7 @@ const UserProfile = () => {
 
     try {
       const response = await fetch(
-        "http://localhost:5000/api/users/change-avatar",
+        `${app_base_url}/users/change-avatar`,
         {
           method: "POST",
           headers: {
@@ -95,7 +98,7 @@ const updateUserDetails = async (e) => {
         userData.set('newPassword', newPassword);
         userData.set('newConfirmPassword', newConfirmPassword);
 
-        const response = await fetch(`http://localhost:5000/api/users/edit-user`, {
+        const response = await fetch(`${app_base_url}/users/edit-user`, {
             method: "PATCH",
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -134,7 +137,7 @@ const updateUserDetails = async (e) => {
         <div className="profile__details">
           <div className="avatar__wrapper">
             <div className="profile__avatar">
-              <img src={`http://localhost:5000/uploads/${avatar}`} alt="" />
+              <img src={`${assets}/uploads/${avatar}`} alt="" />
             </div>
             <form className="avatar__form">
               <input

@@ -4,8 +4,10 @@ import Loader from '../components/Loader.jsx';
 import { useParams } from 'react-router-dom';
 
 const AuthorPosts = () => {
-   const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  const app_base_url = process.env.REACT_APP_BASE_URL;
 
   const { id } = useParams();
 
@@ -15,7 +17,7 @@ const AuthorPosts = () => {
     const fetchPosts = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch(`http://localhost:5000/api/posts/users/${id}`);
+        const response = await fetch(`${app_base_url}/posts/users/${id}`);
         if (!response.ok) {
           throw new Error(`Error: ${response.statusText}`);
         }

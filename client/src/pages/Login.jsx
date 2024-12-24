@@ -15,6 +15,8 @@ const Login = () => {
 
   const { setCurrentUser } = useContext(UserContext);
 
+  const app_base_url = process.env.REACT_APP_BASE_URL;
+
   function changeInputHandler(e) {
     setUserData(prevState => {
       return {...prevState, [e.target.name]: e.target.value}
@@ -28,7 +30,7 @@ const Login = () => {
   setError(""); // Сбрасываем ошибку
 
     try {
-      const response = await fetch("http://localhost:5000/api/users/login", {
+      const response = await fetch(`${app_base_url}/users/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

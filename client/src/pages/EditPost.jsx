@@ -17,6 +17,8 @@ const EditPost = () => {
   const { currentUser } = useContext(UserContext);
   const token = currentUser?.token;
 
+  const app_base_url = process.env.REACT_APP_BASE_URL;
+
   useEffect(() => {
     if (!token) {
       navigate('/login')
@@ -76,7 +78,7 @@ const EditPost = () => {
   useEffect(() => {
   const getPost = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/posts/${id}`, {
+      const response = await fetch(`${app_base_url}/posts/${id}`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -127,7 +129,7 @@ const EditPost = () => {
 
 
     try {
-      const response = await fetch(`http://localhost:5000/api/posts/${id}`, {
+      const response = await fetch(`${app_base_url}/posts/${id}`, {
         method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${token}`,

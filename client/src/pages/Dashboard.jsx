@@ -8,7 +8,10 @@ const Dashboard = () => {
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const {id} = useParams()
+  const { id } = useParams()
+  
+  const assets = process.env.REACT_APP_ASSETS_URL;
+  const app_base_url = process.env.REACT_APP_BASE_URL;
 
   const { currentUser } = useContext(UserContext);
   const token = currentUser?.token;
@@ -24,7 +27,7 @@ const Dashboard = () => {
       setIsLoading(true);
 
       try {
-        const response = await fetch(`http://localhost:5000/api/posts/users/${id}`, {
+        const response = await fetch(`${app_base_url}/posts/users/${id}`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -61,7 +64,7 @@ const Dashboard = () => {
               <article key={post.id} className="dashboard__post">
                 <div className="dashboard__post-info">
                   <div className="dashboard__post-thumbnail">
-                    <img src={`http://localhost:5000/uploads/${post.thumbnail}`} alt={`${post.title} thumbnail`} />
+                    <img src={`${assets}/uploads/${post.thumbnail}`} alt={`${post.title} thumbnail`} />
                   </div>
                   <h5>{post.title}</h5>
                 </div>

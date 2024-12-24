@@ -12,6 +12,8 @@ const Register = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
+  const app_base_url = process.env.REACT_APP_BASE_URL;
+
   function changeInputHandler(e) {
     setUserData((prevState) => {
       return { ...prevState, [e.target.name]: e.target.value };
@@ -24,7 +26,7 @@ const Register = () => {
   setError(""); // Сбрасываем ошибку
 
   try {
-    const response = await fetch("http://localhost:5000/api/users/register", {
+    const response = await fetch(`${app_base_url}/users/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

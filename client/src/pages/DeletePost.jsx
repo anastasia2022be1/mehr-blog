@@ -8,6 +8,8 @@ const DeletePost = ({ postId }) => {
   const location = useLocation();
   const [isLoading, setIsLoading] = useState(false);
 
+  const app_base_url = process.env.REACT_APP_BASE_URL;
+
   const { currentUser } = useContext(UserContext);
   const token = currentUser?.token;
 
@@ -20,7 +22,7 @@ const DeletePost = ({ postId }) => {
   const removePost = async () => {
     setIsLoading(true)
     try {
-      const response = await fetch(`http://localhost:5000/api/posts/${postId}`, {
+      const response = await fetch(`${app_base_url}/posts/${postId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
