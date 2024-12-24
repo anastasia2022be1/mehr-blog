@@ -31,7 +31,20 @@ app.use(express.urlencoded({ extended: true }))
 
 // CORS
 const allowedOrigins = [process.env.CLIENT_URL, 'http://localhost:5173'];
-app.use(cors({ origin: allowedOrigins, credentials: true }));
+const corsOptions = {
+    origin: (origin, callback) => {
+        if (allowedOrigins.includes(origin) || !origin) {
+            callback(null, true); // Разрешить запрос
+        } else {
+            callback(new Error('Not allowed by CORS')); // Отклонить запрос
+        }
+    },
+    credentials: true, // Разрешение отправки cookies
+    methods: ['GET', 'POST', 'PATCH', 'DELETE'], // Разрешенные методы
+    allowedHeaders: ['Content-Type', 'Authorization'], // Разрешенные заголовки
+};
+
+app.use(cors(corsOptions));
 
 app.use(fileUpload());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
