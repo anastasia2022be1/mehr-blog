@@ -5,6 +5,7 @@ import fileUpload from "express-fileupload";
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
+import path from 'path';
 
 
 import userRoutes from './routes/userRoutes.js'
@@ -28,23 +29,26 @@ const __dirname = path.dirname(__filename);
 // const upload = multer({ dest: 'uploads/' });
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
+app.use(express.static(path.join(__dirname, 'build')));
 
 // CORS
 const allowedOrigins = [process.env.CLIENT_URL, 'http://localhost:5173'];
-const corsOptions = {
-    origin: (origin, callback) => {
-        if (allowedOrigins.includes(origin) || !origin) {
-            callback(null, true); // Разрешить запрос
-        } else {
-            callback(new Error('Not allowed by CORS')); // Отклонить запрос
-        }
-    },
-    credentials: true, // Разрешение отправки cookies
-    methods: ['GET', 'POST', 'PATCH', 'DELETE'], // Разрешенные методы
-    allowedHeaders: ['Content-Type', 'Authorization'], // Разрешенные заголовки
-};
+// const corsOptions = {
+//     origin: (origin, callback) => {
+//         if (allowedOrigins.includes(origin) || !origin) {
+//             callback(null, true); // Разрешить запрос
+//         } else {
+//             callback(new Error('Not allowed by CORS')); // Отклонить запрос
+//         }
+//     },
+//     credentials: true, // Разрешение отправки cookies
+//     methods: ['GET', 'POST', 'PATCH', 'DELETE'], // Разрешенные методы
+//     allowedHeaders: ['Content-Type', 'Authorization'], // Разрешенные заголовки
+// };
 
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
+
+app.use(cors({ origin: process.env.CLIENT_URL }));
 
 app.use(fileUpload());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -57,6 +61,11 @@ app.use(notFound);
 
 // Middleware для обработки ошибок
 app.use(errorMiddleware);
+
+// обработчик маршрутов для любых запросов, которые не относятся к API,
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
 
 const port = process.env.PORT || 5000;
 
