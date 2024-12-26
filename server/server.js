@@ -31,23 +31,23 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.static(path.join(__dirname, 'build')));
 
 // CORS
-const allowedOrigins = [process.env.CLIENT_URL, 'http://localhost:5173'];
-// const corsOptions = {
-//     origin: (origin, callback) => {
-//         if (allowedOrigins.includes(origin) || !origin) {
-//             callback(null, true); // Разрешить запрос
-//         } else {
-//             callback(new Error('Not allowed by CORS')); // Отклонить запрос
-//         }
-//     },
-//     credentials: true, // Разрешение отправки cookies
-//     methods: ['GET', 'POST', 'PATCH', 'DELETE'], // Разрешенные методы
-//     allowedHeaders: ['Content-Type', 'Authorization'], // Разрешенные заголовки
-// };
+const allowedOrigins = [process.env.CLIENT_URL, 'https://mehr-blog-3.onrender.com'];
+const corsOptions = {
+    origin: (origin, callback) => {
+        if (allowedOrigins.includes(origin) || !origin) {
+            callback(null, true); // Разрешить запрос
+        } else {
+            callback(new Error('Not allowed by CORS')); // Отклонить запрос
+        }
+    },
+    credentials: true, // Разрешение отправки cookies
+    methods: ['GET', 'POST', 'PATCH', 'DELETE'], // Разрешенные методы
+    allowedHeaders: ['Content-Type', 'Authorization'], // Разрешенные заголовки
+};
 
-// app.use(cors(corsOptions));
+app.use(cors(corsOptions));
 
-app.use(cors({ origin: process.env.CLIENT_URL }));
+// app.use(cors({ origin: process.env.CLIENT_URL }));
 
 app.use(fileUpload());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
