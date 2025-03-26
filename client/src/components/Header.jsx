@@ -30,7 +30,7 @@ const Header = () => {
 
   return (
     <nav>
-      <div className="container nav__container">
+      <div className="nav__container">
         <Link to="/" className="nav__logo" onClick={closeMenu}>
           <img src={Logo} alt="Navbar Logo" />
         </Link>
