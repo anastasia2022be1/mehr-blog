@@ -14,7 +14,7 @@ const UserProfile = () => {
   const [newConfirmPassword, setNewConfirmPassword] = useState("");
   const [isAvatarTouched, setIsAvatarTouched] = useState(false);
   const [message, setMessage] = useState("");
-  const [error, serError] = useState('')
+  const [error, setError] = useState('')
 
   const navigate = useNavigate();
   const { currentUser } = useContext(UserContext);
@@ -123,13 +123,13 @@ const updateUserDetails = async (e) => {
         }
     } catch (error) {
         console.error("Error updating user details:", error.message);
-        serError(error.message || "An error occurred. Please try again.");
+        setError(error.message || "An error occurred. Please try again.");
     }
 };
 
 
   return (
-    <section className="profile style={{ flex: 1 }}">
+    <section className="profile" style={{ flex: 1 }}>
       <div className="container profile__container">
         <Link to={`/myposts/${currentUser.id}`} className="btn">
           My posts

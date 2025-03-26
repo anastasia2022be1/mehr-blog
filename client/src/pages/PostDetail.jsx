@@ -1,10 +1,9 @@
-import { useContext, useEffect, useState } from 'react'
-import { UserContext } from '../context/userContext.jsx';
-import PostAuthor from '../components/PostAuthor.jsx'
-import { Link, useParams } from 'react-router-dom'
-import Loader from '../components/Loader.jsx';
-import DeletePost from './DeletePost.jsx'
-
+import { useContext, useEffect, useState } from "react";
+import { UserContext } from "../context/userContext.jsx";
+import PostAuthor from "../components/PostAuthor.jsx";
+import { Link, useParams } from "react-router-dom";
+import Loader from "../components/Loader.jsx";
+import DeletePost from "./DeletePost.jsx";
 
 const PostDetail = () => {
   const { id } = useParams(); // Получаем ID поста из URL
@@ -45,27 +44,45 @@ const PostDetail = () => {
 
   return (
     <section className="post-detail">
-      {error && <p className='error'>{error }</p>}
-      {post && <div className="container post-detail__container">
-        <div className="post-detail__header">
-          <PostAuthor authorID={post.creator} createdAt={post.createdAt} />
-          {currentUser?.id == post?.creator && <div className="post-detail__btns">
-            <Link to={`/posts/${post?._id}/edit`} className='btn sm primary'>Edit</Link>
-          <DeletePost postId={id} />
-          </div>}
-  
-          
-        </div>
+      {error && <p className="error">{error}</p>}
+      {post && (
+        <div className="container post-detail__container">
+          <div className="post-detail__header">
+            <PostAuthor authorID={post.creator} createdAt={post.createdAt} />
+            {currentUser?.id == post?.creator && (
+              <div className="post-detail__btns">
+                <Link
+                  to={`/posts/${post?._id}/edit`}
+                  className="btn sm primary">
+                  Edit
+                </Link>
+                <DeletePost postId={id} />
+              </div>
+            )}
+          </div>
 
-        <h1>{post.title}</h1>
-        <div className="post-detail__thumbnail">
-          <img src={`${assets}/uploads/${post.thumbnail}`} alt="" />
+          <h1>{post.title}</h1>
+          <div className="post-detail__thumbnail">
+            <img
+              src={
+                post.thumbnail?.startsWith("http")
+                  ? post.thumbnail
+                  : `${assets}/uploads/${post.thumbnail}`
+              }
+              alt={post.title}
+              onError={(e) => {
+                e.target.style.display = "none";
+                console.warn("Image not found:", e.target.src);
+              }}
+            />
+          </div>
+          <div
+            className="post-detail__content"
+            dangerouslySetInnerHTML={{ __html: post.description }}></div>
         </div>
-        <div className="post-detail__content" dangerouslySetInnerHTML={{ __html: post.description }}></div>
-       
-      </div>}
-   </section>
-  )
-}
+      )}
+    </section>
+  );
+};
 
-export default PostDetail
+export default PostDetail;
