@@ -17,14 +17,18 @@ import CategoryPosts from "./pages/CategoryPosts.jsx";
 import AuthorPosts from "./pages/AuthorPosts.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import EditPost from "./pages/EditPost.jsx";
-import DeletePost from "./pages/DeletePost.jsx"
+import DeletePost from "./pages/DeletePost.jsx";
 import Logout from "./pages/Logout.jsx";
 import UserProvider from "./context/userContext.jsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <UserProvider><Layout /></UserProvider>,
+    element: (
+      <UserProvider>
+        <Layout />
+      </UserProvider>
+    ),
     errorElement: <ErrorPage />,
     children: [
       { index: true, element: <Home /> },
@@ -45,7 +49,9 @@ const router = createBrowserRouter([
 ]);
 
 createRoot(document.getElementById("root")).render(
- <StrictMode>
-    <RouterProvider router={router} />
+  <StrictMode>
+    <UserProvider>
+      <RouterProvider router={router} />
+    </UserProvider>
   </StrictMode>
 );

@@ -62,7 +62,7 @@ const Dashboard = () => {
         <div className="container dashboard__container">
           {posts.map((post) => {
             return (
-              <article key={post.id} className="dashboard__post">
+              <article key={post._id} className="dashboard__post">
                 <div className="dashboard__post-info">
                   <div className="dashboard__post-thumbnail">
                     <img src={`${assets}/uploads/${post.thumbnail}`} alt={`${post.title} thumbnail`} />

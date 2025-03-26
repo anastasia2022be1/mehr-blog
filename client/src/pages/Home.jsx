@@ -1,11 +1,13 @@
-import Posts from "../components/Posts.jsx"
+import Posts from "../components/Posts.jsx";
 
 const Home = () => {
   return (
-    <>
-      <Posts />
-    </>
-  )
-}
+    <section className="home" style={{ flex: 1 }}>
+      <div className="container">
+        <Posts />
+      </div>
+    </section>
+  );
+};
 
-export default Home
+export default Home;

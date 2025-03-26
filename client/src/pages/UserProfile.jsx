@@ -129,7 +129,7 @@ const updateUserDetails = async (e) => {
 
 
   return (
-    <section className="profile">
+    <section className="profile style={{ flex: 1 }}">
       <div className="container profile__container">
         <Link to={`/myposts/${currentUser.id}`} className="btn">
           My posts

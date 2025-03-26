@@ -1,15 +1,15 @@
 import { useState, useContext, useEffect } from "react";
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
-import { UserContext } from '../context/userContext.jsx';
-import { useNavigate } from 'react-router-dom';
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+import { UserContext } from "../context/userContext.jsx";
+import { useNavigate } from "react-router-dom";
 
 const CreatePost = () => {
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("Uncategorized");
   const [description, setDescription] = useState("");
   const [thumbnail, setThumbnail] = useState("");
-  const [errorMessage, setErrorMessage] = useState(""); // Для ошибок
+  const [errorMessage, setErrorMessage] = useState("");
 
   const app_base_url = import.meta.env.VITE_APP_BASE_URL;
 
@@ -19,7 +19,7 @@ const CreatePost = () => {
 
   useEffect(() => {
     if (!token) {
-      navigate('/login');
+      navigate("/login");
     }
   }, [token, navigate]);
 
@@ -27,18 +27,42 @@ const CreatePost = () => {
     toolbar: [
       [{ header: [1, 2, 3, 4, 5, 6, false] }],
       ["bold", "italic", "underline", "strike", "blockquote"],
-      [{ list: "ordered" }, { list: "bullet" }, { indent: "-1" }, { indent: "+1" }],
+      [
+        { list: "ordered" },
+        { list: "bullet" },
+        { indent: "-1" },
+        { indent: "+1" },
+      ],
       ["link", "image"],
-      ["clean"]
+      ["clean"],
     ],
   };
 
   const formats = [
-    "header", "bold", "italic", "underline", "strike", "blockquote", "list", "bullet", "numbered", "image", "indent",
+    "header",
+    "bold",
+    "italic",
+    "underline",
+    "strike",
+    "blockquote",
+    "list",
+    "bullet",
+    "numbered",
+    "image",
+    "indent",
   ];
 
   const POST_CATEGORIES = [
-    "Travel", "Fitness", "Food", "Parenting", "Beauty", "Photography", "Art", "Writing", "Music", "Book",
+    "Travel",
+    "Fitness",
+    "Food",
+    "Parenting",
+    "Beauty",
+    "Photography",
+    "Art",
+    "Writing",
+    "Music",
+    "Book",
   ];
 
   const createPost = async (e) => {
@@ -50,35 +74,40 @@ const CreatePost = () => {
     }
 
     const postData = new FormData();
-    postData.set('title', title);
-    postData.set('category', category);
-    postData.set('description', description);
-    postData.set('thumbnail', thumbnail);
+    postData.set("title", title);
+    postData.set("category", category);
+    postData.set("description", description);
+    postData.set("thumbnail", thumbnail);
 
     try {
       const response = await fetch(`${app_base_url}/posts`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
         body: postData,
-        credentials: 'include',
+        credentials: "include",
       });
 
-      if (response.status == 201) {
-        return navigate('/')
-      }
-
+      const result = await response.json();
+      
       if (!response.ok) {
         throw new Error(`Error: ${response.statusText}`);
       }
+      
+      console.log("Post created successfully:", result);
 
-      const result = await response.json();
-      console.log('Post created successfully:', result);
-      navigate('/posts'); // Редирект на страницу с постами
+      setTitle("");
+      setCategory("Uncategorized");
+      setDescription("");
+      setThumbnail("");
+         
+      navigate('/'); 
     } catch (error) {
-      setErrorMessage(error.message || "An error occurred while creating the post");
-      console.error('Error creating post:', error);
+      setErrorMessage(
+        error.message || "An error occurred while creating the post"
+      );
+      console.error("Error creating post:", error);
     }
   };
 
@@ -122,7 +151,19 @@ const CreatePost = () => {
             onChange={(e) => setThumbnail(e.target.files[0])}
           />
 
-          <button type="submit" className="btn primary">Create</button>
+          {thumbnail && (
+            <div style={{ marginTop: "1rem" }}>
+              <img
+                src={URL.createObjectURL(thumbnail)}
+                alt="Preview"
+                style={{ maxWidth: "200px", borderRadius: "var(--radius-2)" }}
+              />
+            </div>
+          )}
+
+          <button type="submit" className="btn primary">
+            Create
+          </button>
         </form>
       </div>
     </section>

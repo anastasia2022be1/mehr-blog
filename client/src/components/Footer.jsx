@@ -1,23 +1,35 @@
 import { Link } from "react-router-dom";
 
+const categories = [
+  "Travel",
+  "Fitness",
+  "Food",
+  "Parenting",
+  "Beauty",
+  "Photography",
+  "Art",
+  "Writing",
+  "Music",
+  "Book"
+];
+
 const Footer = () => {
   return (
-    <footer>
-      <ul className="footer__categories">
-        <li><Link to="/posts/categories/Travel">Travel</Link></li>
-        <li><Link to="/posts/categories/Fitness">Fitness</Link></li>
-        <li><Link to="/posts/categories/Food">Food</Link></li>
-        <li><Link to="/posts/categories/Parenting">Parenting</Link></li>
-        <li><Link to="/posts/categories/Beauty">Beauty</Link></li>
-        <li><Link to="/posts/categories/Photography">Photography</Link></li>
-        <li><Link to="/posts/categories/Art">Art</Link></li>
-        <li><Link to="/posts/categories/Writing">Writing</Link></li>
-        <li><Link to="/posts/categories/Music">Music</Link></li>
-        <li><Link to="/posts/categories/Book">Book</Link></li>
-      </ul>
+    <footer className="footer">
+      <div className="container">
+        <ul className="footer__categories">
+          {categories.map((category) => (
+            <li key={category}>
+              <Link to={`/posts/categories/${category}`}>
+                {category}
+              </Link>
+            </li>
+          ))}
+        </ul>
 
-      <div className="footer__copyright">
-        <small>All Rights Reserved &copy;</small>
+        <div className="footer__copyright">
+          <small>All Rights Reserved &copy; {new Date().getFullYear()}</small>
+        </div>
       </div>
     </footer>
   );

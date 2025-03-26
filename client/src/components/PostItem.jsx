@@ -17,15 +17,16 @@ const PostItem = ({
     description && description.length > 145
       ? description.slice(0, 145) + "..."
       : description;
+
   const postTitle =
     title && title.length > 30 ? title.slice(0, 30) + "..." : title;
-
-  // console.log("Creator:", creator);
 
   return (
     <article className="post">
       <div className="post__thumbnail">
-        <img src={`${assets}/uploads/${thumbnail}`} alt={title} />
+      <img src={thumbnail?.startsWith('http') ? thumbnail : `${assets}/uploads/${thumbnail}`} 
+      alt={`Thumbnail for ${title}`}
+          loading="lazy" />
       </div>
       <div className="post__content">
         <Link to={`/posts/${postID}`}>

@@ -61,7 +61,7 @@ const PostDetail = () => {
         <div className="post-detail__thumbnail">
           <img src={`${assets}/uploads/${post.thumbnail}`} alt="" />
         </div>
-        <p >{post.description}</p>
+        <div className="post-detail__content" dangerouslySetInnerHTML={{ __html: post.description }}></div>
        
       </div>}
    </section>

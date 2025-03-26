@@ -9,6 +9,7 @@ const EditPost = () => {
   const [category, setCategory] = useState("Uncategorized");
   const [description, setDescription] = useState("");
   const [thumbnail, setThumbnail] = useState("");
+  const [postImage, setPostImage] = useState("");
   const [error, setError] = useState('');
 
   const navigate = useNavigate();
@@ -18,12 +19,13 @@ const EditPost = () => {
   const token = currentUser?.token;
 
   const app_base_url = import.meta.env.VITE_APP_BASE_URL;
+  const assets = import.meta.env.VITE_APP_ASSETS_URL;
 
   useEffect(() => {
     if (!token) {
       navigate('/login')
     }
-  }, []);
+  }, [token, navigate]);
 
   const modules = {
     toolbar: [
@@ -90,9 +92,9 @@ const EditPost = () => {
       }
       const data = await response.json();
       setTitle(data.title) || "";
-      //setCategory(data.category);
+      setCategory(data.category || "Uncategorized");
       setDescription(data.description || "");
-      //setThumbnail(data.thumbnail); // Если это нужно для предпросмотра
+      setPostImage(data.thumbnail || "");
     } catch (error) {
       console.error('Error fetching post:', error.message);
     }
@@ -101,7 +103,7 @@ const EditPost = () => {
   if (token) {
     getPost();
   }
-  }, [id, token]); 
+  }, [id, token, app_base_url]); 
   
   const editPost = async (e) => {
     e.preventDefault();
@@ -112,12 +114,10 @@ const EditPost = () => {
   return setError("All fields are required. Description must be at least 12 characters long.");
 }
 
-
     const postData = new FormData();
     postData.set('title', title);
     postData.set('category', category);
     postData.set('description', cleanedDescription);
-    //postData.set('thumbnail', thumbnail);
 
      // Добавляем изображение только если оно выбрано
   if (thumbnail) {
@@ -143,19 +143,20 @@ const EditPost = () => {
     throw new Error(`Error: ${response.statusText}`);
   }
 
-      // if (response.status == 200) {
-      //   return navigate('/')
-      // }
-
       const result = await response.json();
       console.log('Post edited successfully:', result);
-      navigate('/'); 
+      navigate(`/posts/${id}`); 
     } catch (error) {
       console.error('Error updating post:', error);
   setError(error.message || 'An error occurred while updating the post');
     }
 }
 
+useEffect(() => {
+  if (error) {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+}, [error]);
 
   return (
     <section className="create-post">
@@ -187,7 +188,12 @@ const EditPost = () => {
             ))}
           </select>
 
-          <ReactQuill modules={modules} formats={formats} value={description} onChange={setDescription} />
+          <ReactQuill 
+            modules={modules} 
+            formats={formats} 
+            value={description} 
+            onChange={setDescription} 
+          />
           
           {/* Input for thumbnail */}
           <input
@@ -196,6 +202,28 @@ const EditPost = () => {
             onChange={(e) => setThumbnail(e.target.files[0])}
             accept="png, jpg, jpeg"
           />
+
+                    {/* Превью новой картинки (если выбрана) */}
+                    {thumbnail && (
+            <div style={{ marginTop: "1rem" }}>
+              <img
+                src={URL.createObjectURL(thumbnail)}
+                alt="New Preview"
+                style={{ maxWidth: "200px", borderRadius: "var(--radius-2)" }}
+              />
+            </div>
+          )}
+
+          {/* Превью текущей картинки, если нет новой */}
+          {!thumbnail && postImage && (
+            <div style={{ marginTop: "1rem" }}>
+              <img
+                src={`${assets}/uploads/${postImage}`}
+                alt="Current Thumbnail"
+                style={{ maxWidth: "200px", borderRadius: "var(--radius-2)" }}
+              />
+            </div>
+          )}
 
           <button type="submit" className="btn primary">Update</button>
 
