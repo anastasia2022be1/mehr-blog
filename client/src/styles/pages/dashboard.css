@@ -2,6 +2,7 @@
 
 .dashboard {
     flex: 1;
+    margin-top: 6rem;
   }
   
   .dashboard__container {
@@ -37,3 +38,27 @@
     display: flex;
     gap: 1rem;
   }
+
+  @media screen and (max-width: 768px) {
+    .dashboard__post {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .dashboard__post-info {
+      gap: 1rem;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .dashboard__post-thumbnail {
+      width: 100%;
+      max-width: 300px;
+    }
+  
+    .dashboard__post-actions {
+      justify-content: flex-start;
+      flex-wrap: wrap;
+    }
+  }
+  
