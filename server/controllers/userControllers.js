@@ -9,6 +9,7 @@ import { dirname } from 'path';
 
 import HttpError from "../models/errorModel.js"
 import User from "../models/userModel.js";
+import Post from '../models/postModel.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -252,9 +253,23 @@ export const editUser = async (req, res, next) => {
 
 export const getAuthors = async (req, res, next) => {
     try {
-        const authors = await User.find().select('-password')
-        res.json(authors)
+      const users = await User.find().select('-password');
+  
+      // Считаем количество постов у каждого пользователя
+      const usersWithPostCounts = await Promise.all(
+        users.map(async (user) => {
+          const count = await Post.countDocuments({ creator: user._id });
+          return {
+            _id: user._id,
+            name: user.name,
+            avatar: user.avatar,
+            posts: count,
+          };
+        })
+      );
+  
+      res.json(usersWithPostCounts);
     } catch (error) {
-        return next(new HttpError(error))
+      return next(new HttpError(error.message));
     }
-}
+  };
