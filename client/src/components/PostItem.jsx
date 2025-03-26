@@ -10,7 +10,6 @@ const PostItem = ({
   thumbnail,
   createdAt,
 }) => {
-
   const assets = import.meta.env.VITE_APP_ASSETS_URL;
 
   const shortDesc =
@@ -24,15 +23,25 @@ const PostItem = ({
   return (
     <article className="post">
       <div className="post__thumbnail">
-      <img src={thumbnail?.startsWith('http') ? thumbnail : `${assets}/uploads/${thumbnail}`} 
-      alt={`Thumbnail for ${title}`}
-          loading="lazy" />
+        <img
+          src={
+            thumbnail?.startsWith("http")
+              ? thumbnail
+              : `${assets}/uploads/${thumbnail}`
+          }
+          alt={`Thumbnail for ${title}`}
+          loading="lazy"
+        />
       </div>
+
       <div className="post__content">
-        <Link to={`/posts/${postID}`}>
-          <h3>{postTitle}</h3>
-        </Link>
-        <p dangerouslySetInnerHTML={{ __html: shortDesc }} />
+        <div>
+          <Link to={`/posts/${postID}`}>
+            <h3>{postTitle}</h3>
+          </Link>
+          <p dangerouslySetInnerHTML={{ __html: shortDesc }} />
+        </div>
+
         <div className="post__footer">
           <PostAuthor authorID={creator} createdAt={createdAt} />
           <Link to={`/posts/categories/${category}`} className="btn category">
