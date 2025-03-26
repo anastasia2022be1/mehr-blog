@@ -78,7 +78,7 @@ export const createPost = async (req, res, next) => {
 // Получение всех постов
 export const getAllPosts = async (req, res, next) => {
     try {
-        const posts = await Post.find().sort({ updateAt: -1 });
+        const posts = await Post.find().sort({ updatedAt: -1 });
         res.status(200).json(posts);
     } catch (error) {
         return next(new HttpError(error.message || 'Could not retrieve posts', 500));
@@ -105,7 +105,7 @@ export const getPostById = async (req, res, next) => {
 export const getPostsByCategory = async (req, res, next) => {
     try {
         const { category } = req.params;
-        const cateroryPosts = await Post.find({ category }).sort({ createAt: -1 });
+        const cateroryPosts = await Post.find({ category }).sort({ createdAt: -1 });
 
         res.status(200).json(cateroryPosts);
     } catch (error) {
@@ -117,7 +117,7 @@ export const getPostsByCategory = async (req, res, next) => {
 export const getPostsByUser = async (req, res, next) => {
     try {
         const { id } = req.params;
-        const posts = await Post.find({ creator: id }).sort({ createAt: -1 });
+        const posts = await Post.find({ creator: id }).sort({ createdAt: -1 });
 
         res.status(200).json(posts);
     } catch (error) {
