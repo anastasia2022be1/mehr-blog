@@ -6,33 +6,37 @@ import HttpError from '../models/errorModel.js';
 import Post from '../models/postModel.js';
 import User from '../models/userModel.js';
 
+// Define __dirname in ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Создание поста
-
+/**
+ * @desc   Create a new post with image upload
+ * @route  POST /posts
+ * @access Private
+ */
 export const createPost = async (req, res, next) => {
     try {
         const { title, category, description } = req.body;
 
-        // Проверка обязательных полей
+        // Validate required fields and thumbnail file
         if (!title || !description || !category || !req.files || !req.files.thumbnail) {
             return next(new HttpError('All fields are required', 422));
         }
 
         const { thumbnail } = req.files;
 
-        // Проверка размера файла
+        // Validate thumbnail size (must be < 2MB)
         if (thumbnail.size > 2000000) {
             return next(new HttpError('Thumbnail too big. File should be less than 2MB', 422));
         }
 
-        // Генерация уникального имени файла
+        // Generate unique filename
         const fileName = thumbnail.name;
         const fileExtension = fileName.split('.').pop();
         const newFileName = `${uuidv4()}.${fileExtension}`;
 
-        // Перемещение файла в папку uploads
+        // Move file to uploads directory
         const uploadPath = path.join(__dirname, '..', 'uploads', newFileName);
         thumbnail.mv(uploadPath, async (err) => {
             if (err) {
@@ -40,7 +44,7 @@ export const createPost = async (req, res, next) => {
             }
 
             try {
-                // Создание нового поста
+                // Create new post in database
                 const newPost = await Post.create({
                     title,
                     description,
@@ -53,14 +57,13 @@ export const createPost = async (req, res, next) => {
                     return next(new HttpError('Could not create post', 422));
                 }
 
-                // Обновление количества постов пользователя
+                // Update user's post count
                 const currentUser = await User.findById(req.user.id);
                 if (currentUser) {
                     currentUser.posts = (currentUser.posts || 0) + 1;
                     await currentUser.save();
                 }
 
-                // Успешный ответ
                 res.status(201).json({
                     message: 'Post created successfully',
                     post: newPost,
@@ -74,8 +77,11 @@ export const createPost = async (req, res, next) => {
     }
 };
 
-
-// Получение всех постов
+/**
+ * @desc   Get all posts (sorted by latest updated)
+ * @route  GET /posts
+ * @access Public
+ */
 export const getAllPosts = async (req, res, next) => {
     try {
         const posts = await Post.find().sort({ updatedAt: -1 });
@@ -85,7 +91,11 @@ export const getAllPosts = async (req, res, next) => {
     }
 };
 
-// Получение поста по ID
+/**
+ * @desc   Get a post by its ID
+ * @route  GET /posts/:id
+ * @access Public
+ */
 export const getPostById = async (req, res, next) => {
     try {
         const postId = req.params.id;
@@ -101,7 +111,11 @@ export const getPostById = async (req, res, next) => {
     }
 };
 
-// Получение постов по категории
+/**
+ * @desc   Get posts filtered by category
+ * @route  GET /posts/categories/:category
+ * @access Public
+ */
 export const getPostsByCategory = async (req, res, next) => {
     try {
         const { category } = req.params;
@@ -113,7 +127,11 @@ export const getPostsByCategory = async (req, res, next) => {
     }
 };
 
-// Получение постов пользователя
+/**
+ * @desc   Get all posts created by a specific user
+ * @route  GET /posts/users/:id
+ * @access Public
+ */
 export const getPostsByUser = async (req, res, next) => {
     try {
         const { id } = req.params;
@@ -125,34 +143,35 @@ export const getPostsByUser = async (req, res, next) => {
     }
 };
 
-// Обновление поста
+/**
+ * @desc   Update a post with optional thumbnail replacement
+ * @route  PATCH /posts/:id
+ * @access Private (only creator can edit)
+ */
 export const updatePost = async (req, res, next) => {
     try {
         const postId = req.params.id;
         const { title, category, description } = req.body;
 
-        // Проверка входных данных
+        // Validate input
         if (!title || !category || !description || description.length < 12) {
             return next(
                 new HttpError('All fields are required. Description must be at least 12 characters long.', 422)
             );
         }
 
-        console.log('Request body:', req.body);
-        console.log('Request files:', req.files);
-        console.log('Request params:', req.params);
-
-
+        // Find the post to update
         const oldPost = await Post.findById(postId);
         if (!oldPost) {
             return next(new HttpError('Post not found', 404));
         }
 
+        // Check authorization
         if (req.user.id !== oldPost.creator.toString()) {
             return next(new HttpError('You are not authorized to update this post', 403));
         }
 
-        // Если файл не предоставлен, обновляем только текстовые поля
+        // If no new image, update only text fields
         if (!req.files || !req.files.thumbnail) {
             const updatedPost = await Post.findByIdAndUpdate(
                 postId,
@@ -167,7 +186,7 @@ export const updatePost = async (req, res, next) => {
             return res.status(200).json({ message: 'Post successfully updated', updatedPost });
         }
 
-        // Удаление старого файла, если существует
+        // Delete old image if exists
         const oldFilePath = path.join(__dirname, '..', 'uploads', oldPost.thumbnail);
         if (fs.existsSync(oldFilePath)) {
             try {
@@ -177,24 +196,21 @@ export const updatePost = async (req, res, next) => {
             }
         }
 
-        // Работа с новым файлом
+        // Handle new thumbnail file
         const { thumbnail } = req.files;
 
-        // Проверка размера файла
         if (thumbnail.size > 2000000) {
             return next(new HttpError('Thumbnail size exceeds 2MB.', 400));
         }
 
-        // Генерация уникального имени файла
         const fileName = thumbnail.name;
         const splittedFileName = fileName.split('.');
         const newFileName = `${splittedFileName[0]}_${uuidv4()}.${splittedFileName.pop()}`;
 
-        // Сохранение нового файла
         const newFilePath = path.join(__dirname, '..', 'uploads', newFileName);
         await thumbnail.mv(newFilePath);
 
-        // Обновление поста с новым файлом
+        // Update post in database
         const updatedPost = await Post.findByIdAndUpdate(
             postId,
             { title, category, description, thumbnail: newFileName },
@@ -212,87 +228,11 @@ export const updatePost = async (req, res, next) => {
     }
 };
 
-// export const updatePost = async (req, res, next) => {
-//     try {
-//         const postId = req.params.id;
-//         const { title, category, description } = req.body;
-
-//         // Проверка входных данных
-//         if (!title || !category || !description || description.length < 12) {
-//             return next(new HttpError('All fields are required. Description must be at least 12 characters long.', 404));
-//         }
-
-//         // Если файл не предоставлен
-//         if (!req.files || !req.files.thumbnail) {
-//             const updatedPost = await Post.findByIdAndUpdate(
-//                 postId,
-//                 { title, category, description },
-//                 { new: true }
-//             );
-
-//             if (!updatedPost) {
-//                 return next(new HttpError('Post not found', 404));
-//             }
-
-//             return res.status(200).json({ message: 'Post successfully updated', updatedPost });
-//         }
-
-//         // Работа с файлами
-//         const oldPost = await Post.findById(postId);
-//         if (!req.files) {
-
-//         }
-//         if (!oldPost) {
-//             return next(new HttpError('Post not found', 404));
-//         }
-
-//         if (req.user.id !== oldPost.creator.toString()) {
-//             return next(new HttpError('Post could not be deleted', 403));
-//         }
-
-//         // Удаление старого файла
-//         fs.unlink(path.join(__dirname, '..', 'uploads', oldPost.thumbnail), async (err) => {
-//             if (err) {
-//                 return next(new HttpError('Error deleting the old thumbnail file', 500));
-//             }
-//         });
-
-//         // Проверка размера нового файла
-//         const { thumbnail } = req.files;
-//         if (thumbnail.size > 2000000) {
-//             return next(new HttpError('Thumbnail size exceeds 2MB.', 400));
-//         }
-
-//         // Генерация уникального имени файла
-//         const fileName = thumbnail.name;
-//         const splittedFileName = fileName.split('.');
-//         const newFileName = `${splittedFileName[0]}_${uuidv4()}.${splittedFileName.pop()}`;
-
-//         // Сохранение нового файла
-//         thumbnail.mv(path.join(__dirname, '..', 'uploads', newFileName), async (err) => {
-//             if (err) {
-//                 return next(new HttpError('Error uploading the new thumbnail', 500));
-//             }
-//         });
-
-//         // Обновление поста в базе данных
-//         const updatedPost = await Post.findByIdAndUpdate(
-//             postId,
-//             { title, category, description, thumbnail: newFileName },
-//             { new: true }
-//         );
-
-//         if (!updatedPost) {
-//             return next(new HttpError('Post not found', 404));
-//         }
-
-//         res.status(200).json({ message: 'Post successfully updated', updatedPost });
-//     } catch (error) {
-//         return next(new HttpError(error.message || 'Could not update the postт', 500));
-//     }
-// };
-
-// Удаление поста
+/**
+ * @desc   Delete a post and its thumbnail file
+ * @route  DELETE /posts/:id
+ * @access Private (only creator can delete)
+ */
 export const deletePost = async (req, res, next) => {
     try {
         const postId = req.params.id;
@@ -319,7 +259,7 @@ export const deletePost = async (req, res, next) => {
             try {
                 fs.unlink(path.join(__dirname, '..', 'uploads', fileName), (err) => {
                     if (err) {
-                        // console.error("Детали ошибки при удалении файла:", err);
+                        console.error("File deletion error details:", err);
                         return next(new HttpError("Error deleting the thumbnail file", 500));
                     }
                 });

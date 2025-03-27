@@ -1,8 +1,17 @@
+/**
+ * Register Component
+ *
+ * This component allows users to register by providing name, email, password,
+ * and confirming the password. Includes form validation and password visibility toggle.
+ * On successful registration, redirects to the login page.
+ */
+
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Register = () => {
+  // Local state for form inputs, error messages, and password visibility
   const [userData, setUserData] = useState({
     name: "",
     email: "",
@@ -13,14 +22,20 @@ const Register = () => {
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
-  const navigate = useNavigate();
 
+  const navigate = useNavigate();
   const app_base_url = import.meta.env.VITE_APP_BASE_URL;
 
+  /**
+   * Handles changes to input fields and updates local state
+   */
   const changeInputHandler = (e) => {
     setUserData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
+  /**
+   * Submits registration form data to the backend
+   */
   const registerUser = async (e) => {
     e.preventDefault();
     setError("");
@@ -51,8 +66,10 @@ const Register = () => {
       <div className="container">
         <h2>Sign up</h2>
         <form className="form register__form" onSubmit={registerUser}>
+          {/* Display error message if exists */}
           {error && <p className="form__error-message">{error}</p>}
 
+          {/* Full name input */}
           <input
             type="text"
             placeholder="Full Name"
@@ -62,6 +79,7 @@ const Register = () => {
             required
           />
 
+          {/* Email input */}
           <input
             type="email"
             placeholder="Email"
@@ -71,7 +89,7 @@ const Register = () => {
             required
           />
 
-          {/* Password with toggle */}
+          {/* Password input with visibility toggle */}
           <div className="password-wrapper">
             <input
               type={showPassword ? "text" : "password"}
@@ -91,8 +109,8 @@ const Register = () => {
             </span>
           </div>
 
-          {/* Confirm password with toggle */}
-          <div style={{ position: "relative" }}>
+          {/* Confirm password input with visibility toggle */}
+          <div className="password-wrapper">
             <input
               type={showPassword2 ? "text" : "password"}
               placeholder="Confirm password"
@@ -104,25 +122,20 @@ const Register = () => {
             />
             <span
               onClick={() => setShowPassword2((prev) => !prev)}
-              style={{
-                position: "absolute",
-                right: "0.8rem",
-                top: "50%",
-                transform: "translateY(-50%)",
-                cursor: "pointer",
-                color: "#999",
-              }}
+              className="password-toggle"
               title={showPassword2 ? "Hide password" : "Show password"}
             >
               {showPassword2 ? <FaEyeSlash /> : <FaEye />}
             </span>
           </div>
 
+          {/* Submit button */}
           <button type="submit" className="btn primary">
             Register
           </button>
         </form>
 
+        {/* Navigation to login page */}
         <small>
           Already have an account? <Link to="/login">Sign in</Link>
         </small>

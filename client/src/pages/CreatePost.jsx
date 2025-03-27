@@ -4,7 +4,15 @@ import "react-quill/dist/quill.snow.css";
 import { UserContext } from "../context/userContext.jsx";
 import { useNavigate } from "react-router-dom";
 
+/**
+ * CreatePost Component
+ * 
+ * Renders a form for authenticated users to create a new blog post.
+ * Includes title input, category selection, rich text editor, image upload,
+ * and handles submission to the backend API.
+ */
 const CreatePost = () => {
+  // Post state values
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("Uncategorized");
   const [description, setDescription] = useState("");
@@ -12,17 +20,22 @@ const CreatePost = () => {
   const [errorMessage, setErrorMessage] = useState("");
 
   const app_base_url = import.meta.env.VITE_APP_BASE_URL;
-
   const navigate = useNavigate();
   const { currentUser } = useContext(UserContext);
   const token = currentUser?.token;
 
+  /**
+   * Redirect user to login if not authenticated
+   */
   useEffect(() => {
     if (!token) {
       navigate("/login");
     }
   }, [token, navigate]);
 
+  /**
+   * Quill toolbar configuration
+   */
   const modules = {
     toolbar: [
       [{ header: [1, 2, 3, 4, 5, 6, false] }],
@@ -38,6 +51,9 @@ const CreatePost = () => {
     ],
   };
 
+  /**
+   * Quill formatting options
+   */
   const formats = [
     "header",
     "bold",
@@ -65,6 +81,10 @@ const CreatePost = () => {
     "Book",
   ];
 
+  /**
+   * Submits a new post to the backend API
+   * @param {Event} e - form submit event
+   */
   const createPost = async (e) => {
     e.preventDefault();
 
@@ -95,15 +115,14 @@ const CreatePost = () => {
         const message = result.message || `Error: ${response.status}`;
         throw new Error(message);
       }
-      
-      console.log("Post created successfully:", result);
 
+      // Clear fields and redirect on success
       setTitle("");
       setCategory("Uncategorized");
       setDescription("");
       setThumbnail("");
-         
-      navigate('/'); 
+      navigate('/');
+      
     } catch (error) {
       setErrorMessage(
         error.message || "An error occurred while creating the post"

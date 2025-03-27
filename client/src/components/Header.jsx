@@ -5,11 +5,21 @@ import { AiOutlineClose } from "react-icons/ai";
 import { useState, useEffect, useContext } from "react";
 import { UserContext } from "../context/userContext.jsx";
 
+/**
+ * Header component (Navigation Bar)
+ *
+ * Displays the logo, main navigation links, and a toggle button for mobile view.
+ * Adapts to screen size using useEffect to control visibility of the menu.
+ * Shows different links depending on whether the user is logged in.
+ */
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const { currentUser } = useContext(UserContext);
 
-  // Автооткрытие на desktop, скрытие на mobile
+  /**
+   * Automatically open/close menu depending on screen width.
+   * Menu is shown on desktop (>= 800px), hidden on mobile (< 800px).
+   */
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 800) {
@@ -19,11 +29,14 @@ const Header = () => {
       }
     };
 
-    handleResize(); // начальное состояние
+    handleResize(); // Set initial state
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  /**
+   * Closes the mobile menu when a link is clicked
+   */
   const closeMenu = () => {
     if (window.innerWidth < 800) setMenuOpen(false);
   };
@@ -31,22 +44,20 @@ const Header = () => {
   return (
     <nav>
       <div className="nav__container">
+        {/* Logo */}
         <Link to="/" className="nav__logo" onClick={closeMenu}>
           <img src={Logo} alt="Navbar Logo" />
         </Link>
 
-        {/* Кнопка переключения */}
+        {/* Toggle button (mobile only) */}
         <button
           className="nav__toggle-btn"
-          onClick={() => {
-            console.log("Toggle clicked"); // ✅ Должно появиться в консоли
-            setMenuOpen(prev => !prev);
-          }}
+          onClick={() => setMenuOpen(prev => !prev)}
         >
           {menuOpen ? <AiOutlineClose /> : <FaBars />}
         </button>
         
-        {/* Меню */}
+        {/* Navigation menu */}
         <ul className={`nav__menu ${menuOpen ? "show-menu" : ""}`}>
           {currentUser?.id ? (
             <>
@@ -76,7 +87,6 @@ const Header = () => {
             </>
           )}
         </ul>
-
       </div>
     </nav>
   );

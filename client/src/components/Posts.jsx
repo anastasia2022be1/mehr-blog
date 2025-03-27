@@ -2,14 +2,23 @@ import { useEffect, useState, useMemo } from "react";
 import PostItem from "./PostItem.jsx";
 import Loader from "./Loader.jsx";
 
+/**
+ * Posts Component
+ *
+ * Fetches and displays a paginated list of blog posts.
+ * Supports loading state and client-side pagination.
+ */
 const Posts = () => {
-  const [posts, setPosts] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
-  const POSTS_PER_PAGE = 6;
+  const [posts, setPosts] = useState([]);           // All fetched posts
+  const [isLoading, setIsLoading] = useState(true); // Loading indicator
+  const [currentPage, setCurrentPage] = useState(1); // Active pagination page
+  const POSTS_PER_PAGE = 6;                         // Number of posts per page
 
   const app_base_url = import.meta.env.VITE_APP_BASE_URL;
 
+  /**
+   * Fetches all posts from the backend API on mount.
+   */
   useEffect(() => {
     const fetchPosts = async () => {
       setIsLoading(true);
@@ -30,17 +39,29 @@ const Posts = () => {
     fetchPosts();
   }, []);
 
+  // Total number of pages
   const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE);
 
+  /**
+   * Returns only the posts for the current page.
+   */
   const paginatedPosts = useMemo(() => {
     const start = (currentPage - 1) * POSTS_PER_PAGE;
     return posts.slice(start, start + POSTS_PER_PAGE);
   }, [posts, currentPage]);
 
+  /**
+   * Updates current page for pagination.
+   *
+   * @param {number} page - New page number to navigate to
+   */
   const handlePageChange = (page) => {
-    if (page >= 1 && page <= totalPages) setCurrentPage(page);
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
   };
 
+  // Show loader while fetching data
   if (isLoading) {
     return <Loader />;
   }
@@ -49,6 +70,7 @@ const Posts = () => {
     <section className="posts">
       {Array.isArray(posts) && posts.length > 0 ? (
         <>
+          {/* Render visible posts */}
           <div className="container posts__container">
             {paginatedPosts.map(
               ({
@@ -74,7 +96,7 @@ const Posts = () => {
             )}
           </div>
 
-          {/* Пагинация */}
+          {/* Pagination controls */}
           <div className="pagination">
             <button
               className="btn"
@@ -85,7 +107,8 @@ const Posts = () => {
 
             {[...Array(totalPages)].map((_, i) => {
               const page = i + 1;
-              // Показываем только текущую, предыдущую и следующую страницы
+
+              // Show only current, previous, next, first and last pages
               if (
                 page === 1 ||
                 page === totalPages ||
@@ -101,7 +124,7 @@ const Posts = () => {
                 );
               }
 
-              // Показываем "..." только один раз перед и после текущего окна
+              // Ellipsis for skipped page ranges
               if (page === currentPage - 2 || page === currentPage + 2) {
                 return (
                   <span key={page} className="btn disabled">

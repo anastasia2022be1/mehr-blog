@@ -182,7 +182,7 @@ const postSchema = new mongoose.Schema(
       required: true,
     },
   },
-  { timestamps: true } // Automatically adds createdAt and updatedAt fields
+  { timestamps: true } 
 );
 
 const Post = mongoose.model("Post", postSchema);
@@ -198,7 +198,21 @@ export default Post;
 - **Password Hashing:** Uses `bcrypt` to securely hash passwords.
 - **UUID:** Generates unique file names for uploads using `uuid`.
 
+### Run Seeder Script
+
+To populate the database with fake users and posts, use the following command:
+
+```bash
+npm run seed
+```
+
+This script will:
+- Clear existing users and posts.
+- Generate 15 fake users with avatars.
+- Generate 220 fake posts assigned to random users and categories.
+
 ---
+
 
 ## Contributing
 

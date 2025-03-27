@@ -1,35 +1,56 @@
 import express from "express";
-// import multer from "multer";
-
-import authMiddleware from '../middleware/authMiddleware.js';
-import { registerUser, loginUser, getUser, editUser, getAuthors, changeAvatar } from '../controllers/userControllers.js'
+import authMiddleware from "../middleware/authMiddleware.js";
+import {
+  registerUser,
+  loginUser,
+  getUser,
+  editUser,
+  getAuthors,
+  changeAvatar,
+} from "../controllers/userControllers.js";
 
 const router = express.Router();
 
-// const upload = multer({
-//     dest: 'uploads/', // Папка для временного хранения
-//     limits: { fileSize: 5 * 1024 * 1024 }, // Ограничение размера файла (5 MB)
-// });
+/**
+ * @route   POST /api/users/register
+ * @desc    Register a new user
+ * @access  Public
+ */
+router.post("/register", registerUser);
 
+/**
+ * @route   POST /api/users/login
+ * @desc    Authenticate user and return token
+ * @access  Public
+ */
+router.post("/login", loginUser);
 
-// Register new user
-router.post('/register', registerUser);
+/**
+ * @route   GET /api/users/:id
+ * @desc    Get user profile by ID
+ * @access  Public
+ */
+router.get("/:id", getUser);
 
-// Login user
-router.post('/login', loginUser);
+/**
+ * @route   POST /api/users/change-avatar
+ * @desc    Upload or change user avatar
+ * @access  Private
+ */
+router.post("/change-avatar", authMiddleware, changeAvatar);
 
-// Get user profile
-router.get('/:id', getUser);  // Use GET for profile
+/**
+ * @route   PATCH /api/users/edit-user
+ * @desc    Update user name, email, or password
+ * @access  Private
+ */
+router.patch("/edit-user", authMiddleware, editUser);
 
-// Change user avatar
-// router.post('/change-avatar', authMiddleware, upload.single('profilePicture'), changeAvatar);
-router.post('/change-avatar', authMiddleware, changeAvatar);
-
-// Edit user details
-router.patch('/edit-user', authMiddleware, editUser);  // Use PUT for editing user details
-
-// Get all authors (no authentication required)
-router.get('/', getAuthors);  // Use GET for authors
-
+/**
+ * @route   GET /api/users
+ * @desc    Get all authors with post count
+ * @access  Public
+ */
+router.get("/", getAuthors);
 
 export default router;

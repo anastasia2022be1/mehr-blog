@@ -7,7 +7,7 @@ const postSchema = new mongoose.Schema(
             type: String,
             enum: {
                 values: ['Travel', 'Fitness', 'Food', 'Parenting', 'Beauty', 'Photography', 'Art', 'Writing', 'Music', 'Book'],
-                message: "{VALUE} is not a supported category" // {VALUE} для отображения неверного значения
+                message: "{VALUE} is not a supported category" 
             },
             required: true
         },
@@ -15,7 +15,7 @@ const postSchema = new mongoose.Schema(
         thumbnail: { type: String, required: true },
         creator: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }
     },
-    { timestamps: true } // Автоматическое добавление полей createdAt и updatedAt
+    { timestamps: true } 
 );
 
 const Post = mongoose.model("Post", postSchema);

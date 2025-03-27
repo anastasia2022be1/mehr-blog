@@ -2,19 +2,30 @@ import { Link } from "react-router-dom";
 import { useState, useEffect, useMemo } from "react";
 import Loader from "../components/Loader.jsx";
 
+/**
+ * Authors Component
+ *
+ * Displays a list of authors with:
+ * - Search by name
+ * - Sorting by post count (asc/desc)
+ * - Pagination
+ */
 const Authors = () => {
   const [authors, setAuthors] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const [search, setSearch] = useState("");
-  const [sortOrder, setSortOrder] = useState("desc"); // asc | desc
+  const [sortOrder, setSortOrder] = useState("desc"); // "asc" or "desc"
   const [currentPage, setCurrentPage] = useState(1);
   const AUTHORS_PER_PAGE = 8;
 
   const assets = import.meta.env.VITE_APP_ASSETS_URL;
   const app_base_url = import.meta.env.VITE_APP_BASE_URL;
 
+  /**
+   * Fetch all authors from the backend
+   */
   useEffect(() => {
     const getAuthors = async () => {
       setIsLoading(true);
@@ -33,16 +44,20 @@ const Authors = () => {
     getAuthors();
   }, []);
 
-  // 🔍 Фильтрация и сортировка
+  /**
+   * Filter and sort authors based on search input and sort order
+   */
   const filteredSortedAuthors = useMemo(() => {
     let filtered = [...authors];
 
+    // Filter by name
     if (search) {
       filtered = filtered.filter((author) =>
         author.name.toLowerCase().includes(search.toLowerCase())
       );
     }
 
+    // Sort by number of posts
     filtered.sort((a, b) => {
       return sortOrder === "asc" ? a.posts - b.posts : b.posts - a.posts;
     });
@@ -50,13 +65,18 @@ const Authors = () => {
     return filtered;
   }, [authors, search, sortOrder]);
 
-  // 📄 Пагинация
+  /**
+   * Paginate authors based on current page
+   */
   const totalPages = Math.ceil(filteredSortedAuthors.length / AUTHORS_PER_PAGE);
   const paginatedAuthors = filteredSortedAuthors.slice(
     (currentPage - 1) * AUTHORS_PER_PAGE,
     currentPage * AUTHORS_PER_PAGE
   );
 
+  /**
+   * Handle pagination buttons
+   */
   const handlePageChange = (page) => {
     if (page >= 1 && page <= totalPages) setCurrentPage(page);
   };
@@ -66,7 +86,7 @@ const Authors = () => {
   return (
     <section className="authors" style={{ flex: 1 }}>
       <div className="container" style={{ marginBottom: "2rem" }}>
-        {/* 🔍 Поиск */}
+        {/* Search input */}
         <input
           type="text"
           placeholder="Search by name"
@@ -86,7 +106,7 @@ const Authors = () => {
           }}
         />
 
-        {/* ⬆⬇ Сортировка */}
+        {/* Sort toggle button */}
         <div style={{ textAlign: "center", marginBottom: "1rem" }}>
           <button
             className="btn"
@@ -98,12 +118,14 @@ const Authors = () => {
         </div>
       </div>
 
+      {/* Error message */}
       {error && (
         <p className="center" style={{ color: "red" }}>
           {error}
         </p>
       )}
 
+      {/* Render authors */}
       {paginatedAuthors.length > 0 ? (
         <div className="container authors__container">
           {paginatedAuthors.map(({ _id: id, avatar, name, posts }) => {
@@ -128,7 +150,7 @@ const Authors = () => {
         <h3 className="center">No authors found</h3>
       )}
 
-      {/* 📄 Пагинация */}
+      {/* Pagination buttons */}
       {totalPages > 1 && (
         <div className="pagination">
           <button
