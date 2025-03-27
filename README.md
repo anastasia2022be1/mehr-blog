@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Mehr Blog project is a full-stack application consisting of a frontend built with React.js and a backend powered by Node.js and Express.js. It provides a user-friendly interface for managing users and blog posts, integrating seamlessly with a RESTful API backend. The backend leverages MongoDB for data storage and includes middleware for error handling, authentication, and file uploads.
+The Mehr Blog project is a full-stack application consisting of a frontend built with React.js and a backend powered by Node.js and Express.js. It provides a user-friendly interface for managing users and blog posts, integrating seamlessly with a RESTful API backend. The backend leverages MongoDB for data storage and includes middleware for error handling, authentication, and file uploads, and auto-generated API documentation.
 
 ---
 
@@ -35,7 +35,7 @@ The Mehr Blog project is a full-stack application consisting of a frontend built
    npm run dev
    ```
 
-The application will run on `http://localhost:5000` by default.
+The application will run on `http://localhost:5173` by default.
 
 ### Features
 
@@ -157,6 +157,12 @@ The server will run on `http://localhost:5000` by default.
 
 - **Authentication Middleware**: Verifies JWT tokens and attaches user objects to requests.
 - **Error Middleware**: Handles application-level errors and sends appropriate responses.
+
+### API Documentation
+
+- **Swagger**: Auto-generated interactive API docs using `swagger-jsdoc` and `swagger-ui-express`.
+- **View Docs**: Visit [`http://localhost:5000/api-docs`](http://localhost:5000/api-docs) in your browser after starting the server.
+- **Docs Source**: Swagger annotations are added to route handlers in `controllers/*.js`.
 
 ### Database Schema
 

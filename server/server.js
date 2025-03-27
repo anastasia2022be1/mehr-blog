@@ -10,21 +10,21 @@ import userRoutes from './routes/userRoutes.js'
 import postRoutes from './routes/postRoutes.js'
 
 import { notFound, errorMiddleware } from './middleware/errorMiddleware.js';
+import { swaggerDocs } from './swagger.js';
 
 dotenv.config();
 
-// Подключение к MongoDB
+// Connection to MongoDB
 mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log("Connected to MongoDB"))
     .catch((err) => console.error("Failed to connect to MongoDB", err));
 
 const app = express();
 
-// Воссоздаем __dirname
+// Recreate __dirname
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// const upload = multer({ dest: 'uploads/' });
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
 app.use(express.static(path.join(__dirname, 'build')));
@@ -43,13 +43,16 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use("/api/users", userRoutes)
 app.use("/api/posts", postRoutes)
 
-// Middleware для обработки несуществующих маршрутов
+// Swagger docs
+swaggerDocs(app);
+
+// Middleware for handling non-existent routes
 app.use(notFound);
 
-// Middleware для обработки ошибок
+// Middleware for error handling
 app.use(errorMiddleware);
 
-// обработчик маршрутов для любых запросов, которые не относятся к API,
+// Route handler for any non-API requests,
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });

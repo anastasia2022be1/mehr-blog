@@ -11,9 +11,41 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 /**
- * @desc   Create a new post with image upload
- * @route  POST /posts
- * @access Private
+ * @swagger
+ * /api/posts:
+ *   post:
+ *     summary: Create a new blog post
+ *     tags: [Posts]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - title
+ *               - description
+ *               - category
+ *               - thumbnail
+ *             properties:
+ *               title:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               category:
+ *                 type: string
+ *               thumbnail:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       201:
+ *         description: Post created successfully
+ *       422:
+ *         description: Validation error
+ *       500:
+ *         description: Server error
  */
 export const createPost = async (req, res, next) => {
     try {
@@ -78,9 +110,14 @@ export const createPost = async (req, res, next) => {
 };
 
 /**
- * @desc   Get all posts (sorted by latest updated)
- * @route  GET /posts
- * @access Public
+ * @swagger
+ * /api/posts:
+ *   get:
+ *     summary: Get all blog posts
+ *     tags: [Posts]
+ *     responses:
+ *       200:
+ *         description: List of all posts
  */
 export const getAllPosts = async (req, res, next) => {
     try {
@@ -92,9 +129,23 @@ export const getAllPosts = async (req, res, next) => {
 };
 
 /**
- * @desc   Get a post by its ID
- * @route  GET /posts/:id
- * @access Public
+ * @swagger
+ * /api/posts/{id}:
+ *   get:
+ *     summary: Get a post by ID
+ *     tags: [Posts]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The post ID
+ *     responses:
+ *       200:
+ *         description: Post found
+ *       404:
+ *         description: Post not found
  */
 export const getPostById = async (req, res, next) => {
     try {
@@ -112,9 +163,20 @@ export const getPostById = async (req, res, next) => {
 };
 
 /**
- * @desc   Get posts filtered by category
- * @route  GET /posts/categories/:category
- * @access Public
+ * @swagger
+ * /api/posts/categories/{category}:
+ *   get:
+ *     summary: Get posts by category
+ *     tags: [Posts]
+ *     parameters:
+ *       - name: category
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: List of posts in the category
  */
 export const getPostsByCategory = async (req, res, next) => {
     try {
@@ -128,9 +190,20 @@ export const getPostsByCategory = async (req, res, next) => {
 };
 
 /**
- * @desc   Get all posts created by a specific user
- * @route  GET /posts/users/:id
- * @access Public
+ * @swagger
+ * /api/posts/users/{id}:
+ *   get:
+ *     summary: Get posts by user ID
+ *     tags: [Posts]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: List of posts by the user
  */
 export const getPostsByUser = async (req, res, next) => {
     try {
@@ -144,9 +217,46 @@ export const getPostsByUser = async (req, res, next) => {
 };
 
 /**
- * @desc   Update a post with optional thumbnail replacement
- * @route  PATCH /posts/:id
- * @access Private (only creator can edit)
+ * @swagger
+ * /api/posts/{id}:
+ *   patch:
+ *     summary: Update a blog post
+ *     tags: [Posts]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - title
+ *               - category
+ *               - description
+ *             properties:
+ *               title:
+ *                 type: string
+ *               category:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               thumbnail:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       200:
+ *         description: Post updated successfully
+ *       403:
+ *         description: Unauthorized
+ *       404:
+ *         description: Post not found
  */
 export const updatePost = async (req, res, next) => {
     try {
@@ -229,9 +339,26 @@ export const updatePost = async (req, res, next) => {
 };
 
 /**
- * @desc   Delete a post and its thumbnail file
- * @route  DELETE /posts/:id
- * @access Private (only creator can delete)
+ * @swagger
+ * /api/posts/{id}:
+ *   delete:
+ *     summary: Delete a blog post
+ *     tags: [Posts]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Post deleted successfully
+ *       403:
+ *         description: Unauthorized
+ *       404:
+ *         description: Post not found
  */
 export const deletePost = async (req, res, next) => {
     try {

@@ -15,9 +15,36 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 /**
- * @desc    Register a new user
- * @route   POST /api/users/register
- * @access  Public
+ * @swagger
+ * /api/users/register:
+ *   post:
+ *     summary: Register a new user
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - email
+ *               - password
+ *               - password2
+ *             properties:
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *               password2:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: User successfully registered
+ *       422:
+ *         description: Validation error
  */
 export const registerUser = async (req, res, next) => {
   try {
@@ -64,9 +91,32 @@ export const registerUser = async (req, res, next) => {
 };
 
 /**
- * @desc    Login a user
- * @route   POST /api/users/login
- * @access  Public
+ * @swagger
+ * /api/users/login:
+ *   post:
+ *     summary: Login user and return token
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Successful login
+ *       401:
+ *         description: Unauthorized - wrong password
+ *       422:
+ *         description: Validation error
  */
 export const loginUser = async (req, res, next) => {
   try {
@@ -105,9 +155,23 @@ export const loginUser = async (req, res, next) => {
 };
 
 /**
- * @desc    Get user profile by ID
- * @route   GET /api/users/:id
- * @access  Protected
+ * @swagger
+ * /api/users/{id}:
+ *   get:
+ *     summary: Get user by ID
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User ID
+ *     responses:
+ *       200:
+ *         description: User found
+ *       404:
+ *         description: User not found
  */
 export const getUser = async (req, res, next) => {
   try {
@@ -128,9 +192,35 @@ export const getUser = async (req, res, next) => {
 };
 
 /**
- * @desc    Change user avatar
- * @route   POST /api/users/change-avatar
- * @access  Protected
+ * @swagger
+ * /api/users/change-avatar:
+ *   post:
+ *     summary: Upload or update user's avatar
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - avatar
+ *             properties:
+ *               avatar:
+ *                 type: string
+ *                 format: binary
+ *                 description: Profile image file (max 500KB)
+ *     responses:
+ *       200:
+ *         description: Avatar successfully updated
+ *       400:
+ *         description: No file uploaded or file too large
+ *       401:
+ *         description: Unauthorized
+ *       422:
+ *         description: Update failed
  */
 export const changeAvatar = async (req, res, next) => {
   try {
@@ -198,9 +288,43 @@ export const changeAvatar = async (req, res, next) => {
 };
 
 /**
- * @desc    Edit user profile info
- * @route   PATCH /api/users/edit-user
- * @access  Protected
+ * @swagger
+ * /api/users/edit-user:
+ *   patch:
+ *     summary: Update user profile (name, email, password)
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - email
+ *               - currentPassword
+ *               - newPassword
+ *               - newConfirmPassword
+ *             properties:
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               currentPassword:
+ *                 type: string
+ *               newPassword:
+ *                 type: string
+ *               newConfirmPassword:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: User updated successfully
+ *       403:
+ *         description: User not found
+ *       422:
+ *         description: Validation or update error
  */
 export const editUser = async (req, res, next) => {
   try {
@@ -252,9 +376,14 @@ export const editUser = async (req, res, next) => {
 };
 
 /**
- * @desc    Get all authors with their post counts
- * @route   GET /api/users/authors
- * @access  Public
+ * @swagger
+ * /api/users:
+ *   get:
+ *     summary: Get all authors with their post counts
+ *     tags: [Users]
+ *     responses:
+ *       200:
+ *         description: List of users
  */
 export const getAuthors = async (req, res, next) => {
   try {

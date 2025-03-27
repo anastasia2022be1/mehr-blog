@@ -124,6 +124,30 @@ The `postRoutes` file handles all blog post-related endpoints:
 
 ---
 
+## Swagger API Documentation
+
+Swagger is integrated to provide interactive API documentation.
+
+- **Docs available at:** `http://localhost:5000/api-docs`
+
+### How to Add Documentation
+- Swagger definitions are written using JSDoc-style comments inside the route controllers (`./controllers/*.js`).
+- Supported by `swagger-jsdoc` and `swagger-ui-express` packages.
+
+### Example Swagger Comment:
+```js
+/**
+ * @swagger
+ * /api/users/register:
+ *   post:
+ *     summary: Register a new user
+ *     tags: [Users]
+ *     ...
+ */
+```
+
+---
+
 ## Database Schema
 
 ### User Model

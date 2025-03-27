@@ -12,44 +12,166 @@ import {
 const router = express.Router();
 
 /**
- * @route   POST /api/users/register
- * @desc    Register a new user
- * @access  Public
+ * @swagger
+ * /api/users/register:
+ *   post:
+ *     summary: Register a new user
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - email
+ *               - password
+ *               - password2
+ *             properties:
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *               password2:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: User successfully registered
+ *       422:
+ *         description: Validation error
  */
 router.post("/register", registerUser);
 
 /**
- * @route   POST /api/users/login
- * @desc    Authenticate user and return token
- * @access  Public
+ * @swagger
+ * /api/users/login:
+ *   post:
+ *     summary: Authenticate user and return token
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Successful login with token
+ *       422:
+ *         description: Invalid credentials
  */
 router.post("/login", loginUser);
 
 /**
- * @route   GET /api/users/:id
- * @desc    Get user profile by ID
- * @access  Public
+ * @swagger
+ * /api/users/{id}:
+ *   get:
+ *     summary: Get user profile by ID
+ *     tags: [Users]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: User ID
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: User profile returned
+ *       404:
+ *         description: User not found
  */
 router.get("/:id", getUser);
 
 /**
- * @route   POST /api/users/change-avatar
- * @desc    Upload or change user avatar
- * @access  Private
+ * @swagger
+ * /api/users/change-avatar:
+ *   post:
+ *     summary: Upload or change user avatar
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               avatar:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       200:
+ *         description: Avatar updated
+ *       400:
+ *         description: No file uploaded
+ *       401:
+ *         description: Unauthorized
  */
 router.post("/change-avatar", authMiddleware, changeAvatar);
 
 /**
- * @route   PATCH /api/users/edit-user
- * @desc    Update user name, email, or password
- * @access  Private
+ * @swagger
+ * /api/users/edit-user:
+ *   patch:
+ *     summary: Update user name, email, or password
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - email
+ *               - currentPassword
+ *               - newPassword
+ *               - newConfirmPassword
+ *             properties:
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               currentPassword:
+ *                 type: string
+ *               newPassword:
+ *                 type: string
+ *               newConfirmPassword:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: User updated successfully
+ *       401:
+ *         description: Unauthorized
+ *       422:
+ *         description: Validation error
  */
 router.patch("/edit-user", authMiddleware, editUser);
 
 /**
- * @route   GET /api/users
- * @desc    Get all authors with post count
- * @access  Public
+ * @swagger
+ * /api/users:
+ *   get:
+ *     summary: Get all authors with post count
+ *     tags: [Users]
+ *     responses:
+ *       200:
+ *         description: List of authors
  */
 router.get("/", getAuthors);
 
